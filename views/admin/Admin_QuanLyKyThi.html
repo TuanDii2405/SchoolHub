@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Quản lý kỳ thi</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Quản lý kỳ thi</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Tạo kỳ thi mới!')">
+              + Tạo kỳ thi
+            </button>
+            <button class="action-btn" onclick="alert('Lọc kỳ thi!')">
+              Lọc
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên kỳ thi</th>
+                  <th>Ngày thi</th>
+                  <th>Thời gian (phút)</th>
+                  <th>Phân bổ câu hỏi</th>
+                  <th>Phân bổ điểm số</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Tự luyện 14/05/2026</td>
+                  <td>14/05/2026</td>
+                  <td>90</td>
+                  <td>12|4|6</td>
+                  <td>3|4|3</td>
+                  <td>Đang mở</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa kỳ thi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('kỳ thi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Kiểm tra giữa kỳ T5/2026</td>
+                  <td>20/05/2026</td>
+                  <td>60</td>
+                  <td>10|5|5</td>
+                  <td>4|3|3</td>
+                  <td>Chưa mở</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa kỳ thi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('kỳ thi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "admin";
+      window.PAGE_ACTIVE = "quanly-kythi";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?")) alert("Đã xóa!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

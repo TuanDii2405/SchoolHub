@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Quản lý học sinh</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Quản lý học sinh</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Thêm học sinh mới!')">
+              + Thêm mới
+            </button>
+            <button class="action-btn" onclick="alert('Tìm kiếm!')">
+              Tìm kiếm
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Họ và tên</th>
+                  <th>Tên đăng nhập</th>
+                  <th>Ngày sinh</th>
+                  <th>Khối lớp</th>
+                  <th>Điểm KN</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Võ Tấn Duy</td>
+                  <td>hs_vtd</td>
+                  <td>24/05/2005</td>
+                  <td>Khối 11</td>
+                  <td>98020</td>
+                  <td>Hoạt động</td>
+                  <td>
+                    <button
+                      class="btn-edit"
+                      onclick="alert('Sửa học sinh Võ Tấn Duy!')"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('học sinh Võ Tấn Duy')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Trần Thị Bích</td>
+                  <td>hs_ttb</td>
+                  <td>12/03/2005</td>
+                  <td>Khối 11</td>
+                  <td>45210</td>
+                  <td>Hoạt động</td>
+                  <td>
+                    <button
+                      class="btn-edit"
+                      onclick="alert('Sửa học sinh Trần Thị Bích!')"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('học sinh Trần Thị Bích')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "admin";
+      window.PAGE_ACTIVE = "quanly-hocsinh";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?"))
+          alert("Đã xóa " + name + "!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

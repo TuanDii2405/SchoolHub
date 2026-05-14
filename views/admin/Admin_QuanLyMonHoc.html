@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Quản lý môn học</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Quản lý môn học</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Thêm môn học mới!')">
+              + Thêm mới
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên môn học</th>
+                  <th>Khối áp dụng</th>
+                  <th>Số lớp học</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Toán học</td>
+                  <td>10, 11, 12</td>
+                  <td>6</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa Toán học!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('Toán học')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Vật lý</td>
+                  <td>10, 11, 12</td>
+                  <td>5</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa Vật lý!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('Vật lý')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Hóa học</td>
+                  <td>10, 11, 12</td>
+                  <td>5</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa Hóa học!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('Hóa học')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Sinh học</td>
+                  <td>10, 11, 12</td>
+                  <td>4</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa Sinh học!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('Sinh học')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "admin";
+      window.PAGE_ACTIVE = "quanly-monhoc";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?"))
+          alert("Đã xóa " + name + "!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

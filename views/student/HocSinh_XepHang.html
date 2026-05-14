@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Học sinh – Xếp hạng</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ HỌC SINH</h2></div>
+        <div class="content-box">
+          <div class="section-title blue">Xếp hạng</div>
+          <div style="margin-top: 6px">
+            <button class="sub-btn block" onclick="alert('Xếp hạng theo lớp!')">
+              Xếp hạng theo lớp
+            </button>
+            <button
+              class="sub-btn block"
+              onclick="alert('Xếp hạng theo khối!')"
+            >
+              Xếp hạng theo khối
+            </button>
+            <button class="sub-btn block" onclick="alert('Xếp hạng theo môn!')">
+              Xếp hạng theo môn
+            </button>
+            <button class="sub-btn block" onclick="alert('Xếp hạng tổng hợp!')">
+              Xếp hạng tổng hợp
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "hocsinh";
+      window.PAGE_ACTIVE = "hs-xephang";
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

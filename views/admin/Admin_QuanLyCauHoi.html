@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Quản lý câu hỏi</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Quản lý câu hỏi</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Thêm câu hỏi mới!')">
+              + Thêm mới
+            </button>
+            <button class="action-btn" onclick="alert('Lọc theo loại!')">
+              Lọc
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Nội dung câu hỏi</th>
+                  <th>Loại</th>
+                  <th>Chủ đề</th>
+                  <th>Độ khó</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td style="text-align: left">
+                    Tính giá trị của biểu thức C(5,2)?
+                  </td>
+                  <td>TN 4 phương án</td>
+                  <td>Đại số tổ hợp</td>
+                  <td>Dễ</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa câu hỏi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('câu hỏi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td style="text-align: left">
+                    Phân tử CH4 có liên kết cộng hóa trị không phân cực?
+                  </td>
+                  <td>TN Đúng Sai</td>
+                  <td>Hóa hữu cơ</td>
+                  <td>Trung bình</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa câu hỏi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('câu hỏi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td style="text-align: left">Đơn vị của điện trở là gì?</td>
+                  <td>TN Trả lời ngắn</td>
+                  <td>Điện học</td>
+                  <td>Dễ</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa câu hỏi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('câu hỏi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "admin";
+      window.PAGE_ACTIVE = "quanly-cauhoi";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?")) alert("Đã xóa!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

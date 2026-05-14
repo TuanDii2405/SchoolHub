@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin – Quản lý giáo viên</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css">
+</head>
+<body>
+<div id="app-header"></div>
+<div class="layout">
+    <div id="app-sidebar"></div>
+    <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+            <div class="section-title">Quản lý giáo viên</div>
+            <div class="action-bar">
+                <button class="action-btn" onclick="alert('Thêm giáo viên mới!')">+ Thêm mới</button>
+                <button class="action-btn" onclick="alert('Tìm kiếm!')">Tìm kiếm</button>
+                <button class="action-btn" onclick="location.reload()">Làm mới</button>
+            </div>
+            <div class="table-wrap">
+                <table class="tbl">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Họ và tên</th>
+                            <th>Tên đăng nhập</th>
+                            <th>Email</th>
+                            <th>Môn phụ trách</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>Giang Thùy Hằng</td>
+                            <td>gv_hang</td>
+                            <td>hang@hcmue.edu.vn</td>
+                            <td>Toán học</td>
+                            <td>Hoạt động</td>
+                            <td>
+                                <button class="btn-edit" onclick="alert('Sửa giáo viên Giang Thùy Hằng!')">Sửa</button>
+                                <button class="btn-danger" onclick="confirmDelete('giáo viên Giang Thùy Hằng')">Xóa</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Giang Thùy Vân</td>
+                            <td>gv_van</td>
+                            <td>van@hcmue.edu.vn</td>
+                            <td>Hóa học</td>
+                            <td>Hoạt động</td>
+                            <td>
+                                <button class="btn-edit" onclick="alert('Sửa giáo viên Giang Thùy Vân!')">Sửa</button>
+                                <button class="btn-danger" onclick="confirmDelete('giáo viên Giang Thùy Vân')">Xóa</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Nguyễn Văn A</td>
+                            <td>gv_nva</td>
+                            <td>nva@hcmue.edu.vn</td>
+                            <td>Sinh học</td>
+                            <td>Hoạt động</td>
+                            <td>
+                                <button class="btn-edit" onclick="alert('Sửa giáo viên Nguyễn Văn A!')">Sửa</button>
+                                <button class="btn-danger" onclick="confirmDelete('giáo viên Nguyễn Văn A')">Xóa</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+<script>
+    window.PAGE_ROLE = 'admin'; window.PAGE_ACTIVE = 'quanly-giaovien';
+    function confirmDelete(name) {
+        if (confirm('Bạn có chắc muốn xóa ' + name + '?')) alert('Đã xóa ' + name + '!');
+    }
+</script>
+<script src="/PHP_FinalExam/assets/js/layout.js"></script>
+</body>
+</html>

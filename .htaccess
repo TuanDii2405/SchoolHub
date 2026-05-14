@@ -1,0 +1,16 @@
+DirectoryIndex index.php
+
+RewriteEngine On
+
+# Redirect old login HTML endpoint to PHP auth page.
+RewriteRule ^dangnhap\.html$ dangnhap.php [R=302,L,NC]
+
+# Internally map legacy root PHP endpoints to new organized pages structure.
+RewriteRule ^dangnhap\.php$ pages/auth/dangnhap.php [L,NC,QSA]
+RewriteRule ^(Admin_.+\.php)$ pages/admin/$1 [L,NC,QSA]
+RewriteRule ^(GiaoVien_.+\.php)$ pages/teacher/$1 [L,NC,QSA]
+RewriteRule ^(HocSinh_.+\.php)$ pages/student/$1 [L,NC,QSA]
+
+# Redirect old role HTML endpoints to guarded PHP endpoints.
+RewriteCond %{REQUEST_URI} ^/PHP_FinalExam/(Admin_|GiaoVien_|HocSinh_).+\.html$ [NC]
+RewriteRule ^(Admin_|GiaoVien_|HocSinh_)(.+)\.html$ $1$2.php [R=302,L,NC]

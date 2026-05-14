@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đổi mật khẩu – Hệ thống Quản lý Trường học</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      .auth-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 34px 14px;
+      }
+      .auth-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        border: 1.5px solid #9fc0ea;
+        padding: 34px 34px 26px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 18px 40px rgba(18, 72, 116, 0.2);
+        backdrop-filter: blur(2px);
+      }
+      .auth-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 5px;
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(90deg, #124874, #2f6897);
+      }
+      .auth-card h2 {
+        font-size: 24px;
+        font-weight: 700;
+        color: #124874;
+        margin-bottom: 8px;
+        text-align: center;
+        letter-spacing: 0.2px;
+      }
+      .auth-subtitle {
+        text-align: center;
+        color: #4e6b88;
+        font-size: 13px;
+        margin-bottom: 22px;
+      }
+      .form-group {
+        margin-bottom: 14px;
+      }
+      .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1e4d94;
+        margin-bottom: 5px;
+      }
+      .field-wrap {
+        position: relative;
+      }
+      .field-wrap i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #5d82b8;
+        font-size: 14px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 10px 12px 10px 36px;
+        border: 1.5px solid #7fa7de;
+        border-radius: 10px;
+        font-size: 13px;
+        outline: none;
+        background: #f8fbff;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+      .form-group input:focus {
+        border-color: #124874;
+        box-shadow: 0 0 0 3px rgba(18, 72, 116, 0.14);
+      }
+      .btn-submit {
+        width: 100%;
+        padding: 11px;
+        background: #124874;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .btn-submit:hover {
+        background: #0d3657;
+        transform: translateY(-1px);
+      }
+      .btn-submit i {
+        margin-right: 6px;
+      }
+      .btn-back {
+        width: 100%;
+        padding: 10px;
+        background: transparent;
+        color: #124874;
+        border: 1.5px solid #7fa7de;
+        border-radius: 10px;
+        font-size: 13px;
+        cursor: pointer;
+        margin-top: 12px;
+        transition:
+          background 0.2s,
+          transform 0.2s;
+      }
+      .btn-back:hover {
+        background: #d3e1f2;
+        transform: translateY(-1px);
+      }
+      .btn-back i {
+        margin-right: 6px;
+      }
+      .hint-text {
+        font-size: 12px;
+        color: #4e6b88;
+        margin-top: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-left">
+        <a
+          href="https://i.ibb.co/s9YdMrTJ/Logo-HCMUE-Gia-tri-cot-loi-1-co-vien.png"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Logo HCMUE"
+        >
+          <img
+            class="header-logo-img"
+            src="https://i.ibb.co/s9YdMrTJ/Logo-HCMUE-Gia-tri-cot-loi-1-co-vien.png"
+            alt="Logo Trường ĐHSP TP.HCM"
+          />
+        </a>
+      </div>
+    </header>
+
+    <div class="auth-wrap">
+      <div class="auth-card">
+        <h2>ĐỔI MẬT KHẨU</h2>
+        <p class="auth-subtitle">
+          Bảo mật tài khoản bằng mật khẩu mới an toàn hơn
+        </p>
+
+        <form onsubmit="handleChangePassword(event)">
+          <div class="form-group">
+            <label for="username">Tên đăng nhập</label>
+            <div class="field-wrap">
+              <i class="bi bi-at"></i>
+              <input
+                type="text"
+                id="username"
+                placeholder="Nhập tên đăng nhập..."
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="old-password">Mật khẩu hiện tại</label>
+            <div class="field-wrap">
+              <i class="bi bi-lock"></i>
+              <input
+                type="password"
+                id="old-password"
+                placeholder="Nhập mật khẩu hiện tại..."
+                required
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="new-password">Mật khẩu mới</label>
+            <div class="field-wrap">
+              <i class="bi bi-key"></i>
+              <input
+                type="password"
+                id="new-password"
+                placeholder="Nhập mật khẩu mới..."
+                required
+              />
+            </div>
+            <p class="hint-text">Tối thiểu 6 ký tự</p>
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Xác nhận mật khẩu mới</label>
+            <div class="field-wrap">
+              <i class="bi bi-shield-check"></i>
+              <input
+                type="password"
+                id="confirm-password"
+                placeholder="Nhập lại mật khẩu mới..."
+                required
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="btn-submit">
+            <i class="bi bi-key"></i>Xác nhận đổi mật khẩu
+          </button>
+          <button
+            type="button"
+            class="btn-back"
+            onclick="window.location.href = 'dangnhap.php'"
+          >
+            <i class="bi bi-arrow-return-left"></i>Quay lại đăng nhập
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      function handleChangePassword(e) {
+        e.preventDefault();
+        var username = document.getElementById("username").value.trim();
+        var oldPass = document.getElementById("old-password").value;
+        var newPass = document.getElementById("new-password").value;
+        var confirmPass = document.getElementById("confirm-password").value;
+
+        if (!username || !oldPass || !newPass || !confirmPass) {
+          alert("Vui lòng nhập đầy đủ thông tin!");
+          return;
+        }
+
+        if (newPass.length < 6) {
+          alert("Mật khẩu mới phải có ít nhất 6 ký tự!");
+          return;
+        }
+
+        if (newPass !== confirmPass) {
+          alert("Mật khẩu xác nhận không khớp!");
+          return;
+        }
+
+        if (oldPass === newPass) {
+          alert("Mật khẩu mới không được trùng với mật khẩu cũ!");
+          return;
+        }
+
+        alert("Đổi mật khẩu thành công!\nVui lòng đăng nhập lại.");
+        window.location.href = "dangnhap.php";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Học sinh – Danh sách kỳ thi</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ HỌC SINH</h2></div>
+        <div class="content-box">
+          <div class="section-title blue">Danh sách kỳ thi</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+            <button class="action-btn" onclick="alert('Lọc kỳ thi!')">
+              Lọc
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Tên kỳ thi</th>
+                  <th>Ngày thi</th>
+                  <th>Thời gian (phút)</th>
+                  <th>Phân bổ đề thi theo câu hỏi</th>
+                  <th>Phân bổ đề thi theo điểm số</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tự luyện 14/05/2026</td>
+                  <td>14/05/2026</td>
+                  <td>90</td>
+                  <td>12|4|6</td>
+                  <td>3|4|3</td>
+                  <td>
+                    <a class="tbl-link" onclick="alert('Bắt đầu tham gia thi!')"
+                      >Tham gia thi</a
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Kiểm tra giữa kỳ T5/2026</td>
+                  <td>20/05/2026</td>
+                  <td>60</td>
+                  <td>10|5|5</td>
+                  <td>4|3|3</td>
+                  <td>
+                    <span style="color: #aaa; font-size: 12px">Chưa mở</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "hocsinh";
+      window.PAGE_ACTIVE = "hs-ds-kythi";
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

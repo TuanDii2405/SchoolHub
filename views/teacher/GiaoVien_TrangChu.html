@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giáo viên – Trang chủ</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ GIÁO VIÊN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Thông báo hệ thống</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Tạo thông báo!')">
+              Tạo thông báo
+            </button>
+            <button class="action-btn" onclick="alert('Lọc thông báo!')">
+              Lọc thông báo
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="empty-notice">
+            Hiện tại không có thông báo nào trên hệ thống
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "giaovien";
+      window.PAGE_ACTIVE = "";
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

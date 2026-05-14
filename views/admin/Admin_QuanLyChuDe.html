@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Quản lý chủ đề</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Quản lý chủ đề</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Thêm chủ đề mới!')">
+              + Thêm mới
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên chủ đề</th>
+                  <th>Môn học</th>
+                  <th>Khối lớp</th>
+                  <th>Số câu hỏi</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Đại số tổ hợp</td>
+                  <td>Toán học</td>
+                  <td>Khối 11</td>
+                  <td>48</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa chủ đề!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('chủ đề này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Hóa hữu cơ</td>
+                  <td>Hóa học</td>
+                  <td>Khối 11</td>
+                  <td>35</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa chủ đề!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('chủ đề này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Điện học</td>
+                  <td>Vật lý</td>
+                  <td>Khối 11</td>
+                  <td>52</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa chủ đề!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('chủ đề này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "admin";
+      window.PAGE_ACTIVE = "quanly-chude";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?")) alert("Đã xóa!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

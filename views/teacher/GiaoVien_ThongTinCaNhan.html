@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giáo viên – Thông tin cá nhân</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ GIÁO VIÊN</h2></div>
+        <div class="content-box">
+          <div class="section-title blue">Thông tin cá nhân</div>
+          <table class="info-table" style="max-width: 600px">
+            <tr>
+              <td class="info-label">Họ và tên</td>
+              <td><span class="info-value">Giang Thùy Hằng</span></td>
+            </tr>
+            <tr>
+              <td class="info-label">Ngày sinh</td>
+              <td><span class="info-value">15/03/1990</span></td>
+            </tr>
+            <tr>
+              <td class="info-label">Môn phụ trách</td>
+              <td><span class="info-value">Toán học</span></td>
+            </tr>
+            <tr>
+              <td class="info-label">Email</td>
+              <td><span class="info-value">hang@hcmue.edu.vn</span></td>
+            </tr>
+            <tr>
+              <td class="info-label">Số lớp đang dạy</td>
+              <td><span class="info-value">3 lớp</span></td>
+            </tr>
+            <tr>
+              <td class="info-label">Ngày tham gia</td>
+              <td><span class="info-value">01/09/2020</span></td>
+            </tr>
+          </table>
+          <br />
+          <button class="btn-primary" onclick="alert('Cập nhật thông tin!')">
+            Cập nhật thông tin
+          </button>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "giaovien";
+      window.PAGE_ACTIVE = "gv-thongtin";
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

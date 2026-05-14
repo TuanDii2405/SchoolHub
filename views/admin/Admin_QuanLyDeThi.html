@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin – Quản lý đề thi</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="content-box">
+          <div class="section-title">Quản lý đề thi</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Tạo đề thi mới!')">
+              + Tạo đề thi
+            </button>
+            <button class="action-btn" onclick="alert('Lọc đề thi!')">
+              Lọc
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Tên đề thi</th>
+                  <th>Kỳ thi</th>
+                  <th>Môn học</th>
+                  <th>Tổng câu hỏi</th>
+                  <th>Tổng điểm</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Đề thi Toán 11 – 001</td>
+                  <td>Tự luyện 14/05/2026</td>
+                  <td>Toán học</td>
+                  <td>22</td>
+                  <td>10</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa đề thi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('đề thi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Đề thi Hóa 11 – 001</td>
+                  <td>Tự luyện 14/05/2026</td>
+                  <td>Hóa học</td>
+                  <td>20</td>
+                  <td>10</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa đề thi!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('đề thi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "admin";
+      window.PAGE_ACTIVE = "quanly-dethi";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?")) alert("Đã xóa!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

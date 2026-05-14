@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Giáo viên – Trắc nghiệm 4 phương án</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ GIÁO VIÊN</h2></div>
+        <div class="content-box">
+          <div class="section-title blue">
+            Ngân hàng câu hỏi – Trắc nghiệm 4 phương án
+          </div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="alert('Thêm câu hỏi mới!')">
+              + Thêm câu hỏi
+            </button>
+            <button class="action-btn" onclick="alert('Lọc theo chủ đề!')">
+              Lọc
+            </button>
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>STT</th>
+                  <th>Nội dung câu hỏi</th>
+                  <th>Đáp án A</th>
+                  <th>Đáp án B</th>
+                  <th>Đáp án C</th>
+                  <th>Đáp án D</th>
+                  <th>Đúng</th>
+                  <th>Chủ đề</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td style="text-align: left">C(5,2) bằng bao nhiêu?</td>
+                  <td>5</td>
+                  <td>10</td>
+                  <td>15</td>
+                  <td>20</td>
+                  <td>B</td>
+                  <td>Đại số tổ hợp</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('câu hỏi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td style="text-align: left">
+                    Logarit cơ số 10 của 1000 là?
+                  </td>
+                  <td>1</td>
+                  <td>2</td>
+                  <td>3</td>
+                  <td>4</td>
+                  <td>C</td>
+                  <td>Hàm số mũ và logarit</td>
+                  <td>
+                    <button class="btn-edit" onclick="alert('Sửa!')">
+                      Sửa
+                    </button>
+                    <button
+                      class="btn-danger"
+                      onclick="confirmDelete('câu hỏi này')"
+                    >
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "giaovien";
+      window.PAGE_ACTIVE = "tn4pa";
+      function confirmDelete(name) {
+        if (confirm("Bạn có chắc muốn xóa " + name + "?")) alert("Đã xóa!");
+      }
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>

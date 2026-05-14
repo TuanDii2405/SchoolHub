@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Học sinh – Lịch sử làm bài</title>
+    <link rel="stylesheet" href="/PHP_FinalExam/assets/css/style.css" />
+  </head>
+  <body>
+    <div id="app-header"></div>
+    <div class="layout">
+      <div id="app-sidebar"></div>
+      <main class="main-content">
+        <div class="role-title-box"><h2>VAI TRÒ HỌC SINH</h2></div>
+        <div class="content-box">
+          <div class="section-title blue">Lịch sử làm bài</div>
+          <div class="action-bar">
+            <button class="action-btn" onclick="location.reload()">
+              Làm mới
+            </button>
+            <button class="action-btn" onclick="alert('Lọc lịch sử!')">
+              Lọc
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Kỳ thi</th>
+                  <th>Thời gian nộp</th>
+                  <th>Điểm số</th>
+                  <th>Thời gian làm</th>
+                  <th>Điểm phần 1</th>
+                  <th>Điểm phần 2</th>
+                  <th>Điểm phần 3</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Tự luyện 14/05/2026</td>
+                  <td>16:52 13/05/2026</td>
+                  <td>6,8</td>
+                  <td>48 phút</td>
+                  <td>2,0</td>
+                  <td>4,4</td>
+                  <td>0,4</td>
+                  <td>
+                    <a class="tbl-link" onclick="alert('Xem chi tiết bài thi!')"
+                      >Xem chi tiết</a
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td>Tự luyện 13/05/2026</td>
+                  <td>09:30 13/05/2026</td>
+                  <td>7,5</td>
+                  <td>55 phút</td>
+                  <td>3,0</td>
+                  <td>3,5</td>
+                  <td>1,0</td>
+                  <td>
+                    <a class="tbl-link" onclick="alert('Xem chi tiết bài thi!')"
+                      >Xem chi tiết</a
+                    >
+                  </td>
+                </tr>
+                <tr>
+                  <td
+                    colspan="8"
+                    style="text-align: center; color: #aaa; font-style: italic"
+                  >
+                    ...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      window.PAGE_ROLE = "hocsinh";
+      window.PAGE_ACTIVE = "hs-lichsu-lamdai";
+    </script>
+    <script src="/PHP_FinalExam/assets/js/layout.js"></script>
+  </body>
+</html>
