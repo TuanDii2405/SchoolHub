@@ -1,152 +1,302 @@
-# PHP FinalExam - Báo cáo kiểm tra hệ thống
+# PHP FinalExam — Hệ thống thi trực tuyến
 
-Ngày cập nhật: 2026-05-14
+Dự án Laravel 12 · PHP 8.2 · MySQL · Tailwind CSS 4 · Vite
 
-## 1) Mục tiêu dự án
+---
 
-Xây dựng hệ thống thi trực tuyến cho 3 nhóm người dùng:
+## Mục lục
 
-1. Admin
-2. Teacher
-3. Student
+1. [Yêu cầu hệ thống](#1-yêu-cầu-hệ-thống)
+2. [Cài đặt phần mềm cần thiết](#2-cài-đặt-phần-mềm-cần-thiết)
+3. [Lấy mã nguồn](#3-lấy-mã-nguồn)
+4. [Cài đặt dự án](#4-cài-đặt-dự-án)
+5. [Cấu hình môi trường (.env)](#5-cấu-hình-môi-trường-env)
+6. [Nhập cơ sở dữ liệu](#6-nhập-cơ-sở-dữ-liệu)
+7. [Build giao diện (Vite)](#7-build-giao-diện-vite)
+8. [Chạy ứng dụng](#8-chạy-ứng-dụng)
+9. [Tài khoản mặc định](#9-tài-khoản-mặc-định)
+10. [Xử lý lỗi thường gặp](#10-xử-lý-lỗi-thường-gặp)
 
-Mục tiêu nghiệp vụ:
+---
 
-1. Quản lý tài khoản, lớp, môn, khối, kỳ thi.
-2. Quản lý ngân hàng câu hỏi và đề thi.
-3. Học sinh tham gia thi và theo dõi kết quả.
+## 1. Yêu cầu hệ thống
 
-## 2) Cấu trúc hiện tại (đã chuẩn hóa)
+| Phần mềm | Phiên bản tối thiểu | Ghi chú                        |
+| -------- | ------------------- | ------------------------------ |
+| Windows  | 10 / 11             |                                |
+| XAMPP    | 8.2.x               | Bao gồm PHP 8.2, Apache, MySQL |
+| Composer | 2.x                 | Quản lý package PHP            |
+| Node.js  | 18 LTS hoặc mới hơn | Bao gồm npm                    |
+| Git      | bất kỳ              | Để clone mã nguồn              |
 
-Thư mục gốc hiện gọn, tách rõ từng lớp:
+> VS Code đã có sẵn. Các phần mềm còn lại sẽ được hướng dẫn cài đặt ở bước 2.
 
-1. pages: toàn bộ trang PHP theo role.
-2. views: template HTML giao diện theo role.
-3. auth: xử lý đăng nhập/đăng xuất.
-4. guards: kiểm tra đăng nhập và phân quyền.
-5. config: cấu hình kết nối CSDL.
-6. bootstrap: session + helper dùng chung.
-7. assets: CSS/JS/ảnh.
-8. router.php: router cho PHP built-in server.
-9. run.bat: script chạy hệ thống local.
+---
 
-Chi tiết pages:
+## 2. Cài đặt phần mềm cần thiết
 
-1. pages/admin: 10 trang.
-2. pages/teacher: 10 trang.
-3. pages/student: 7 trang.
-4. pages/auth: 1 trang đăng nhập.
+### 2.1 XAMPP (PHP 8.2 + Apache + MySQL)
 
-## 3) Kết quả kiểm tra từ trên xuống
+1. Tải XAMPP tại: https://www.apachefriends.org/download.html  
+   Chọn phiên bản **PHP 8.2.x** (Windows installer `.exe`).
 
-### 3.1 EntryPoint và Routing
+2. Chạy file cài đặt, giữ mặc định, cài vào `C:\xampp`.
 
-Đã kiểm tra:
+3. Sau khi cài xong, mở **XAMPP Control Panel**:
+   - Nhấn **Start** bên cạnh **Apache**.
+   - Nhấn **Start** bên cạnh **MySQL**.
+   - Cả hai phải hiện chữ **Running** (nền xanh lá).
 
-1. index.php định tuyến theo role session.
-2. .htaccess map URL cũ sang cấu trúc pages mới.
-3. router.php map URL cũ khi chạy bằng PHP built-in server.
-4. run.bat chạy local với 2 chế độ:
-   - Apache/XAMPP nếu có.
-   - Built-in server nếu không có Apache.
+4. Thêm PHP vào PATH của Windows để dùng trong terminal:
+   - Nhấn `Win + S` → gõ **"environment variables"** → chọn **"Edit the system environment variables"**.
+   - Nhấn **Environment Variables...** → tìm dòng **Path** trong **System variables** → nhấn **Edit**.
+   - Nhấn **New** → nhập `C:\xampp\php` → nhấn **OK** tất cả.
+   - Mở terminal mới và kiểm tra: `php -v` → phải hiện `PHP 8.2.x`.
 
-Kết quả:
+### 2.2 Composer
 
-1. Truy cập dangnhap.php thành công (HTTP 200).
-2. Truy cập Admin_TrangChu.php thành công (HTTP 200).
-3. Truy cập GiaoVien_TrangChu.php thành công (HTTP 200).
-4. Truy cập HocSinh_TrangChu.php thành công (HTTP 200).
+1. Tải Composer tại: https://getcomposer.org/Composer-Setup.exe
 
-### 3.2 Auth, Session, Guard
+2. Chạy file `.exe`, nhấn **Next** liên tục.  
+   Khi hỏi đường dẫn PHP, chọn `C:\xampp\php\php.exe`.
 
-Đã kiểm tra:
+3. Kiểm tra sau cài đặt (mở terminal mới):
+   ```
+   composer --version
+   ```
+   Phải hiện `Composer version 2.x.x`.
 
-1. auth/login.php xác thực bằng email/số điện thoại hoặc alias role.
-2. auth/logout.php hủy session đúng chuẩn.
-3. guards/auth.php chặn khi chưa đăng nhập.
-4. guards/role.php chặn sai quyền và trả 403.
+### 2.3 Node.js
 
-Kết quả:
+1. Tải Node.js tại: https://nodejs.org/  
+   Chọn phiên bản **LTS** (ví dụ: 20.x hoặc 22.x).
 
-1. Luồng phân quyền role đã hoạt động.
-2. Chuyển hướng theo role sau login đã cấu hình đủ.
+2. Chạy file `.msi`, nhấn **Next** liên tục, giữ mặc định.
 
-### 3.3 Database và dữ liệu mẫu
+3. Kiểm tra sau cài đặt (mở terminal mới):
+   ```
+   node -v
+   npm -v
+   ```
+   Phải hiện version hợp lệ.
 
-Đã kiểm tra:
+### 2.4 Git
 
-1. createDatabaseConnection trong config/database.php.
-2. Cơ chế chọn DB chỉ nhận DB có bảng User.
-3. Kết nối thực tế và đếm dữ liệu User.
+1. Tải Git tại: https://git-scm.com/download/win
 
-Kết quả:
+2. Chạy file cài đặt, giữ mặc định, nhấn **Next** liên tục.
 
-1. DB đang dùng: school_exam_db.
-2. Tổng User: 37.
-3. Admin: 1.
-4. Teacher: 6.
-5. Student: 30.
+3. Kiểm tra:
+   ```
+   git --version
+   ```
 
-### 3.4 Chất lượng mã hiện tại
+---
 
-Đã kiểm tra:
+## 3. Lấy mã nguồn
 
-1. Syntax/Problems toàn workspace.
-2. Đồng bộ đường dẫn sau khi dọn thư mục.
-3. Encoding UTF-8 cho các file PHP quan trọng.
+Mở **Terminal** (PowerShell hoặc Command Prompt) và chạy:
 
-Kết quả:
+```powershell
+cd C:\xampp\htdocs
+git clone <URL_REPO> PHP_FinalExam
+cd PHP_FinalExam
+```
 
-1. Không phát hiện lỗi cú pháp.
-2. Hệ thống chạy được trên local.
+> Nếu đã có thư mục `PHP_FinalExam` rồi thì bỏ qua bước clone, chỉ cần `cd C:\xampp\htdocs\PHP_FinalExam`.
 
-## 4) Những gì đã đạt được
+---
 
-1. Hoàn tất nền tảng đăng nhập + session + role guard.
-2. Hoàn tất bộ trang role theo cấu trúc pages + views tách biệt.
-3. Hoàn tất route tương thích ngược URL cũ, không gãy link.
-4. Hoàn tất script run local linh hoạt (Apache hoặc built-in).
-5. Hoàn tất cơ chế chống chọn nhầm DB không đúng schema User.
-6. Hoàn tất dữ liệu mẫu đủ để test 3 vai trò.
+## 4. Cài đặt dự án
 
-## 5) Những gì cần làm tiếp theo (ưu tiên)
+Đảm bảo đang ở trong thư mục `C:\xampp\htdocs\PHP_FinalExam`, sau đó chạy tuần tự:
 
-### Ưu tiên cao (nên làm ngay)
+```powershell
+# Cài PHP dependencies
+composer install
 
-1. Chuyển mật khẩu mẫu sang hash bằng password_hash.
-2. Bổ sung CSRF token cho form đăng nhập và form thay đổi dữ liệu.
-3. Bổ sung log lỗi hệ thống ra file để debug (không lộ cho người dùng).
-4. Thống nhất charset UTF-8 cho toàn bộ file còn lại.
+# Cài Node dependencies
+npm install
+```
 
-### Ưu tiên trung bình
+> Bước `composer install` có thể mất 1-3 phút. Bước `npm install` mất khoảng 30 giây.
 
-1. Chuyển các trang HTML tĩnh trong views thành trang động gắn DB thật.
-2. Hoàn thiện CRUD thật cho:
-   - Quản lý giáo viên/học sinh.
-   - Quản lý lớp học/khối/môn.
-   - Chủ đề/câu hỏi/đề thi/kỳ thi.
-3. Hoàn thiện nghiệp vụ làm bài thi, chấm điểm, lưu lịch sử.
-4. Hoàn thiện nghiệp vụ điểm danh và đơn xin nghỉ.
+---
 
-### Ưu tiên cải tiến
+## 5. Cấu hình môi trường (.env)
 
-1. Bổ sung test tối thiểu cho login, guard, DB connection.
-2. Chuẩn hóa logging và cấu hình môi trường dev/prod.
-3. Viết tài liệu API/luồng xử lý cho từng nhóm chức năng.
+### 5.1 Tạo file .env
 
-## 6) Cách chạy nhanh
+```powershell
+copy .env.example .env
+```
 
-1. Chạy run.bat tại thư mục dự án.
-2. Mở URL được script in ra (có thể là cổng 8080 hoặc 8081).
-3. Đăng nhập để test theo vai trò.
+### 5.2 Chỉnh sửa .env
 
-## 7) Tài khoản test nhanh
+Mở file `.env` trong VS Code và sửa các dòng sau:
 
-1. Admin: admin / admin123
-2. Giáo viên: giaovien / gv123
-3. Học sinh: hocsinh / hs123
+```env
+APP_NAME="PHP FinalExam"
+APP_URL=http://localhost/PHP_FinalExam/public
 
-Ghi chú:
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=school_exam_db
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-1. Có thể đăng nhập bằng email hoặc số điện thoại của User trong DB.
-2. Dữ liệu mẫu hiện dùng cho mục đích phát triển/local test.
+> Mật khẩu MySQL của XAMPP mặc định là **trống** (để trống `DB_PASSWORD=`).
+
+### 5.3 Sinh Application Key
+
+```powershell
+php artisan key:generate
+```
+
+Lệnh này tự ghi `APP_KEY=base64:...` vào file `.env`.
+
+### 5.4 Tạo bảng Session
+
+Dự án dùng `SESSION_DRIVER=database`. Chạy migration để tạo bảng session:
+
+```powershell
+php artisan migrate
+```
+
+> Lệnh này tạo các bảng `sessions`, `cache`, `jobs` trong database. **Không** tạo bảng nghiệp vụ (bảng đó đã có trong file SQL ở bước 6).
+
+---
+
+## 6. Nhập cơ sở dữ liệu
+
+### 6.1 Mở phpMyAdmin
+
+Mở trình duyệt và truy cập: `http://localhost/phpmyadmin`
+
+### 6.2 Import file SQL
+
+1. Trong phpMyAdmin, nhấn tab **Import** ở thanh trên cùng.
+2. Nhấn **Choose File** → điều hướng đến thư mục dự án → chọn file `database_school_exam.sql`.
+3. Nhấn **Import** (nút màu xám phía dưới).
+4. Chờ vài giây → phpMyAdmin hiện thông báo thành công màu xanh lá.
+
+> File SQL sẽ tự tạo database `school_exam_db` và toàn bộ bảng + dữ liệu mẫu.
+
+### 6.3 Kiểm tra
+
+Trong phpMyAdmin, bên trái sẽ xuất hiện database `school_exam_db` với các bảng:  
+`User`, `Lop_Hoc`, `Mon_Hoc`, `Cau_Hoi`, `De_Thi`, `Ky_Thi`, v.v.
+
+---
+
+## 7. Build giao diện (Vite)
+
+```powershell
+npm run build
+```
+
+> Lệnh này compile CSS (Tailwind) và JS, xuất ra thư mục `public/build/`. Cần chạy lại mỗi khi thay đổi file CSS/JS.
+
+---
+
+## 8. Chạy ứng dụng
+
+### Cách 1: Dùng XAMPP (Khuyến nghị cho bài nộp)
+
+1. Đảm bảo **Apache** và **MySQL** đang **Running** trong XAMPP Control Panel.
+2. Mở trình duyệt, truy cập:
+   ```
+   http://localhost/PHP_FinalExam/public
+   ```
+
+### Cách 2: Dùng PHP built-in server (Phát triển nhanh)
+
+```powershell
+php artisan serve
+```
+
+Mở trình duyệt, truy cập: `http://127.0.0.1:8000`
+
+> Cách này không cần Apache nhưng MySQL trong XAMPP vẫn phải đang chạy.
+
+---
+
+## 9. Tài khoản mặc định
+
+| Vai trò   | Tên đăng nhập | Mật khẩu   |
+| --------- | ------------- | ---------- |
+| Admin     | `admin`       | `admin123` |
+| Giáo viên | `giaovien`    | `gv123`    |
+| Học sinh  | `hocsinh`     | `hs123`    |
+
+> Có thể đăng nhập bằng **email** hoặc **số điện thoại** của bất kỳ tài khoản nào trong database.
+
+---
+
+## 10. Xử lý lỗi thường gặp
+
+### Lỗi: `php: command not found` hoặc `'php' is not recognized`
+
+PHP chưa được thêm vào PATH. Thực hiện lại bước 2.1 (thêm `C:\xampp\php` vào PATH) rồi mở lại terminal.
+
+### Lỗi: `composer: command not found`
+
+Khởi động lại máy sau khi cài Composer, hoặc thêm `C:\ProgramData\ComposerSetup\bin` vào PATH thủ công.
+
+### Lỗi: `SQLSTATE[HY000] [1045] Access denied for user 'root'`
+
+Mật khẩu MySQL sai. Kiểm tra lại `DB_PASSWORD` trong `.env`. Với XAMPP mặc định, để trống.
+
+### Lỗi: `SQLSTATE[HY000] [2002] Connection refused`
+
+MySQL chưa chạy. Mở XAMPP Control Panel → nhấn **Start** bên cạnh **MySQL**.
+
+### Lỗi: `No application encryption key has been specified`
+
+Chưa sinh APP_KEY. Chạy: `php artisan key:generate`
+
+### Lỗi: `Table 'school_exam_db.sessions' doesn't exist`
+
+Chưa chạy migration. Chạy: `php artisan migrate`
+
+### Trang trắng hoặc lỗi 500 sau khi import SQL
+
+1. Kiểm tra file `.env` đã cấu hình đúng chưa.
+2. Xóa cache: `php artisan config:clear && php artisan cache:clear`
+3. Kiểm tra `storage/logs/laravel.log` để xem lỗi chi tiết.
+
+### CSS/JS không load (trang không có giao diện)
+
+Chưa build Vite. Chạy: `npm run build`
+
+---
+
+## Tóm tắt lệnh (chạy lần đầu từ đầu đến cuối)
+
+```powershell
+# 1. Vào thư mục dự án
+cd C:\xampp\htdocs\PHP_FinalExam
+
+# 2. Cài dependencies
+composer install
+npm install
+
+# 3. Tạo và sửa .env (xem chi tiết mục 5)
+copy .env.example .env
+# → Mở .env, đổi DB_CONNECTION=mysql, thêm DB_DATABASE=school_exam_db
+
+# 4. Sinh key + tạo bảng session
+php artisan key:generate
+php artisan migrate
+
+# 5. Import database_school_exam.sql qua phpMyAdmin (xem mục 6)
+
+# 6. Build giao diện
+npm run build
+
+# 7. Mở trình duyệt
+# XAMPP: http://localhost/PHP_FinalExam/public
+# hoặc chạy: php artisan serve  →  http://127.0.0.1:8000
+```

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin – Quản lý kỳ thi</title>
+    <title>Giáo viên – Quản lý kỳ thi</title>
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <style>
         .modal-section {
@@ -16,7 +16,6 @@
             border-bottom: 1px solid var(--cerulean-200);
             margin-bottom: 4px;
         }
-        .form-input-sm { padding: 6px 9px; font-size: 13px; }
         .score-hint { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
         #totalDiem { font-weight: 700; }
         #totalDiem.ok  { color: #256029; }
@@ -28,9 +27,9 @@
 <div class="layout">
     <div id="app-sidebar"></div>
     <main class="main-content">
-        <div class="role-title-box"><h2>VAI TRÒ ADMIN</h2></div>
+        <div class="role-title-box"><h2>VAI TRÒ GIÁO VIÊN</h2></div>
         <div class="content-box">
-            <div class="section-title">Quản lý kỳ thi</div>
+            <div class="section-title blue">Quản lý kỳ thi</div>
 
             @if (session('success'))
                 <div class="alert alert-success">{{ session('success') }}</div>
@@ -40,7 +39,7 @@
             @endif
             @if ($errors->any())
                 <div class="alert alert-danger">
-                    @foreach ($errors->all() as $err) {{ $err }}<br> @endforeach
+                    @foreach ($errors->all() as $e) {{ $e }}<br> @endforeach
                 </div>
             @endif
 
@@ -82,13 +81,11 @@
                             <td>{{ $kt->PhanBoDiemTracNghiem4PhuongAn_KyThi }}|{{ $kt->PhanBoDiemTracNghiemDungSai_KyThi }}|{{ $kt->PhanBoDiemTracNghiemTraLoiNgan_KyThi }}</td>
                             <td>
                                 <button class="btn-edit" onclick='openEdit(@json($kt))'>Sửa</button>
-
                                 <form method="POST"
-                                      action="{{ route('admin.ky-thi.destroy', $kt->ID_KyThi) }}"
+                                      action="{{ route('teacher.ky-thi.destroy', $kt->ID_KyThi) }}"
                                       style="display:inline"
                                       onsubmit="return confirm('Xóa kỳ thi {{ addslashes($kt->Ten_KyThi) }}?')">
-                                    @csrf
-                                    @method('DELETE')
+                                    @csrf @method('DELETE')
                                     <button type="submit" class="btn-danger">Xóa</button>
                                 </form>
                             </td>
@@ -103,19 +100,18 @@
     </main>
 </div>
 
-{{-- ========== MODAL THÊM / SỬA KỲ THI ========== --}}
+{{-- MODAL THÊM / SỬA KỲ THI --}}
 <div id="modalOverlay" class="modal-overlay" style="display:none" onclick="closeOnBackdrop(event)">
     <div class="modal-box" style="width:580px">
         <div class="modal-header">
             <span class="modal-header-title" id="modalTitle">Tạo kỳ thi mới</span>
             <button class="modal-close" onclick="closeModal()">×</button>
         </div>
-        <form id="modalForm" method="POST" action="{{ route('admin.ky-thi.store') }}">
+        <form id="modalForm" method="POST" action="{{ route('teacher.ky-thi.store') }}">
             @csrf
             <input type="hidden" name="_method" id="formMethod" value="POST">
 
             <div class="modal-body">
-                {{-- Thông tin cơ bản --}}
                 <div class="modal-section">Thông tin cơ bản</div>
 
                 <div class="form-group">
@@ -130,7 +126,6 @@
                            placeholder="Ghi chú thêm về kỳ thi" maxlength="255">
                 </div>
 
-                {{-- Phân loại --}}
                 <div class="modal-section" style="margin-top:8px">Phân loại</div>
 
                 <div class="form-row">
@@ -183,7 +178,6 @@
                     </div>
                 </div>
 
-                {{-- Thời gian --}}
                 <div class="modal-section" style="margin-top:8px">Thời gian</div>
 
                 <div class="form-row">
@@ -203,7 +197,6 @@
                            min="1" max="300" placeholder="VD: 45" required>
                 </div>
 
-                {{-- Số câu hỏi --}}
                 <div class="modal-section" style="margin-top:8px">Số câu hỏi</div>
 
                 <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
@@ -224,7 +217,6 @@
                     </div>
                 </div>
 
-                {{-- Phân bổ điểm --}}
                 <div class="modal-section" style="margin-top:8px">Phân bổ điểm (tổng = 10)</div>
 
                 <div class="form-row" style="grid-template-columns:1fr 1fr 1fr">
@@ -258,13 +250,12 @@
 </div>
 
 <script>
-    window.PAGE_ROLE   = 'admin';
-    window.PAGE_ACTIVE = 'quanly-kythi';
+    window.PAGE_ROLE   = 'giaovien';
+    window.PAGE_ACTIVE = 'gv-kythi';
 
-    const storeUrl   = "{{ route('admin.ky-thi.store') }}";
-    const updateBase = "{{ url('admin/ky-thi') }}";
+    const storeUrl   = "{{ route('teacher.ky-thi.store') }}";
+    const updateBase = "{{ url('giao-vien/ky-thi') }}";
 
-    // Dữ liệu cascade từ server
     const allChuDe  = @json($chuDesAll);
     const allLopHoc = @json($lopHocsAll);
     const allDeThi  = @json($deThisAll);
@@ -284,6 +275,8 @@
         fillSelect('f_dethi', allDeThi,
             d => (!khoi || d.ID_MaKhoi === khoi) && (!mon || d.ID_MaMon === mon),
             d => d.ID_MaDeThi, d => d.TenDeThi, '— Chọn đề thi —');
+
+        document.getElementById('dethi-count-hint').style.display = 'none';
     }
 
     function fillSelect(id, data, filterFn, valFn, labelFn, placeholder) {
@@ -308,82 +301,10 @@
         el.className   = Math.abs(total - 10) < 0.001 ? 'ok' : 'err';
     }
 
-    function resetForm() {
-        ['f_ten','f_mota','f_batdau','f_ketthuc'].forEach(id => document.getElementById(id).value = '');
-        ['f_khoi','f_mon','f_lophoc','f_chude','f_dethi'].forEach(id => document.getElementById(id).value = '');
-        ['f_so4pa','f_sods','f_songan','f_d4pa','f_dds','f_dngan'].forEach(id => document.getElementById(id).value = 0);
-        document.getElementById('f_thoigian').value = '';
-        cascadeFilter();
-        calcDiem();
-    }
-
-    function openAdd() {
-        document.getElementById('modalTitle').textContent = 'Tạo kỳ thi mới';
-        document.getElementById('modalForm').action       = storeUrl;
-        document.getElementById('formMethod').value       = 'POST';
-        document.getElementById('submitBtn').textContent  = 'Tạo';
-        resetForm();
-        document.getElementById('modalOverlay').style.display = 'flex';
-        document.getElementById('f_ten').focus();
-    }
-
-    function openEdit(kt) {
-        document.getElementById('modalTitle').textContent = 'Sửa kỳ thi';
-        document.getElementById('modalForm').action       = updateBase + '/' + kt.ID_KyThi;
-        document.getElementById('formMethod').value       = 'PUT';
-        document.getElementById('submitBtn').textContent  = 'Cập nhật';
-
-        document.getElementById('f_ten').value     = kt.Ten_KyThi   || '';
-        document.getElementById('f_mota').value    = kt.MoTa_KyThi  || '';
-        document.getElementById('f_thoigian').value= kt.ThoiGianLamBai_KyThi || '';
-        document.getElementById('f_so4pa').value   = kt.SoCauHoiTracNghiem4PhuongAn_KyThi   || 0;
-        document.getElementById('f_sods').value    = kt.SoCauHoiTracNghiemDungSai_KyThi     || 0;
-        document.getElementById('f_songan').value  = kt.SoCauHoiTracNghiemTraLoiNgan_KyThi  || 0;
-        document.getElementById('f_d4pa').value    = kt.PhanBoDiemTracNghiem4PhuongAn_KyThi  || 0;
-        document.getElementById('f_dds').value     = kt.PhanBoDiemTracNghiemDungSai_KyThi    || 0;
-        document.getElementById('f_dngan').value   = kt.PhanBoDiemTracNghiemTraLoiNgan_KyThi || 0;
-
-        // datetime-local cần format YYYY-MM-DDTHH:MM
-        document.getElementById('f_batdau').value  = kt.ThoiGianBatDau_KyThi
-            ? kt.ThoiGianBatDau_KyThi.replace(' ', 'T').substring(0, 16) : '';
-        document.getElementById('f_ketthuc').value = kt.ThoiGianKetThuc_KyThi
-            ? kt.ThoiGianKetThuc_KyThi.replace(' ', 'T').substring(0, 16) : '';
-
-        // Set khối + môn trước để cascade lọc đúng
-        document.getElementById('f_khoi').value = kt.ID_KhoiLop || '';
-        document.getElementById('f_mon').value  = kt.ID_MonHoc  || '';
-        cascadeFilter();
-
-        // Sau khi cascade, set lại giá trị đã chọn
-        document.getElementById('f_lophoc').value = kt.ID_LopHoc  || '';
-        document.getElementById('f_chude').value  = kt.ID_ChuDe   || '';
-        document.getElementById('f_dethi').value  = kt.ID_MaDeThi || '';
-
-        calcDiem();
-        loadDeThiCount();
-        document.getElementById('modalOverlay').style.display = 'flex';
-    }
-
-    function closeModal() {
-        document.getElementById('modalOverlay').style.display = 'none';
-    }
-
-    function closeOnBackdrop(e) {
-        if (e.target === document.getElementById('modalOverlay')) closeModal();
-    }
-
-    function filterTable() {
-        const q    = document.getElementById('searchInput').value.toLowerCase();
-        const rows = document.querySelectorAll('#kyThiTable tbody tr');
-        rows.forEach(row => {
-            row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
-        });
-    }
-
-    const demCauHoiBase = "{{ url('admin/de-thi') }}";
+    const demCauHoiBase = "{{ url('giao-vien/de-thi') }}";
 
     async function loadDeThiCount() {
-        const id = document.getElementById('f_dethi').value;
+        const id   = document.getElementById('f_dethi').value;
         const hint = document.getElementById('dethi-count-hint');
         if (!id) { hint.style.display = 'none'; return; }
         try {
@@ -412,7 +333,74 @@
         document.getElementById('hint-warn').textContent = warns.length ? '⚠ ' + warns.join(', ') : '';
     }
 
-    // Khởi tạo cascade khi load trang
+    function resetForm() {
+        ['f_ten','f_mota','f_batdau','f_ketthuc'].forEach(id => document.getElementById(id).value = '');
+        ['f_khoi','f_mon','f_lophoc','f_chude','f_dethi'].forEach(id => document.getElementById(id).value = '');
+        ['f_so4pa','f_sods','f_songan','f_d4pa','f_dds','f_dngan'].forEach(id => document.getElementById(id).value = 0);
+        document.getElementById('f_thoigian').value = '';
+        cascadeFilter();
+        calcDiem();
+    }
+
+    function openAdd() {
+        document.getElementById('modalTitle').textContent = 'Tạo kỳ thi mới';
+        document.getElementById('modalForm').action       = storeUrl;
+        document.getElementById('formMethod').value       = 'POST';
+        document.getElementById('submitBtn').textContent  = 'Tạo';
+        resetForm();
+        document.getElementById('modalOverlay').style.display = 'flex';
+        document.getElementById('f_ten').focus();
+    }
+
+    function openEdit(kt) {
+        document.getElementById('modalTitle').textContent = 'Sửa kỳ thi';
+        document.getElementById('modalForm').action       = updateBase + '/' + kt.ID_KyThi;
+        document.getElementById('formMethod').value       = 'PUT';
+        document.getElementById('submitBtn').textContent  = 'Cập nhật';
+
+        document.getElementById('f_ten').value      = kt.Ten_KyThi   || '';
+        document.getElementById('f_mota').value     = kt.MoTa_KyThi  || '';
+        document.getElementById('f_thoigian').value = kt.ThoiGianLamBai_KyThi || '';
+        document.getElementById('f_so4pa').value    = kt.SoCauHoiTracNghiem4PhuongAn_KyThi   || 0;
+        document.getElementById('f_sods').value     = kt.SoCauHoiTracNghiemDungSai_KyThi     || 0;
+        document.getElementById('f_songan').value   = kt.SoCauHoiTracNghiemTraLoiNgan_KyThi  || 0;
+        document.getElementById('f_d4pa').value     = kt.PhanBoDiemTracNghiem4PhuongAn_KyThi  || 0;
+        document.getElementById('f_dds').value      = kt.PhanBoDiemTracNghiemDungSai_KyThi    || 0;
+        document.getElementById('f_dngan').value    = kt.PhanBoDiemTracNghiemTraLoiNgan_KyThi || 0;
+
+        document.getElementById('f_batdau').value  = kt.ThoiGianBatDau_KyThi
+            ? kt.ThoiGianBatDau_KyThi.replace(' ', 'T').substring(0, 16) : '';
+        document.getElementById('f_ketthuc').value = kt.ThoiGianKetThuc_KyThi
+            ? kt.ThoiGianKetThuc_KyThi.replace(' ', 'T').substring(0, 16) : '';
+
+        document.getElementById('f_khoi').value = kt.ID_KhoiLop || '';
+        document.getElementById('f_mon').value  = kt.ID_MonHoc  || '';
+        cascadeFilter();
+
+        document.getElementById('f_lophoc').value = kt.ID_LopHoc  || '';
+        document.getElementById('f_chude').value  = kt.ID_ChuDe   || '';
+        document.getElementById('f_dethi').value  = kt.ID_MaDeThi || '';
+
+        calcDiem();
+        loadDeThiCount();
+        document.getElementById('modalOverlay').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').style.display = 'none';
+    }
+
+    function closeOnBackdrop(e) {
+        if (e.target === document.getElementById('modalOverlay')) closeModal();
+    }
+
+    function filterTable() {
+        const q    = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('#kyThiTable tbody tr').forEach(row => {
+            row.style.display = row.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+
     cascadeFilter();
     calcDiem();
 </script>

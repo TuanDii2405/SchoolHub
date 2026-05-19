@@ -33,6 +33,9 @@
 
     "ds-lophoc": "bi-people",
     diemdanh: "bi-clipboard2-check",
+    "don-xin-nghi": "bi-file-earmark-check",
+    "gv-kythi": "bi-calendar-check",
+    "diem-hoc-sinh": "bi-bar-chart-line",
     "ds-chude": "bi-bookmarks",
     "ds-dethi": "bi-file-earmark-text",
     tn4pa: "bi-ui-radios-grid",
@@ -151,12 +154,27 @@
             label: "Quản lý điểm danh",
             href: "/giao-vien/diem-danh",
           },
+          {
+            id: "don-xin-nghi",
+            label: "Đơn xin nghỉ",
+            href: "/giao-vien/don-xin-nghi",
+          },
         ],
       },
       {
         id: "kythi",
         label: "Quản lý kỳ thi",
         items: [
+          {
+            id: "gv-kythi",
+            label: "Danh sách kỳ thi",
+            href: "/giao-vien/ky-thi",
+          },
+          {
+            id: "diem-hoc-sinh",
+            label: "Điểm học sinh",
+            href: "/giao-vien/diem-hoc-sinh",
+          },
           {
             id: "ds-chude",
             label: "Danh sách chủ đề",
@@ -382,9 +400,10 @@
     if (t.indexOf("sửa") >= 0 || t.indexOf("cập nhật") >= 0)
       return "bi-pencil-square";
     if (t.indexOf("xóa") >= 0) return "bi-trash";
+    if (t.indexOf("học sinh") >= 0) return "bi-people";
     if (t.indexOf("chi tiết") >= 0 || t.indexOf("xem") >= 0) return "bi-search";
     if (t.indexOf("lưu") >= 0) return "bi-save";
-    return "bi-dot";
+    return null;
   }
 
   function decorateActionElement(el) {
@@ -393,8 +412,9 @@
     var rawText = (el.textContent || "").trim();
     if (!rawText) return;
     var iconClass = findIconByText(rawText);
+    if (!iconClass) return;
     var label = rawText.replace(
-      /^\s*[\u2190-\u27BF\uE000-\uF8FF\u2600-\u26FF\uD83C-\uDBFF\uDC00-\uDFFF]+\s*/,
+      /^\s*[+\-\u00D7*#@!\u2190-\u27BF\uE000-\uF8FF\u2600-\u26FF\uD83C-\uDBFF\uDC00-\uDFFF]+\s*/,
       "",
     );
     el.innerHTML =
@@ -424,11 +444,42 @@
       .forEach(decorateActionElement);
   }
 
+  /* ── Impersonation banner ── */
+  function getImpersonatingName() {
+    var match = document.cookie.match(/(?:^|;\s*)admin_impersonating=([^;]+)/);
+    return match ? decodeURIComponent(match[1]) : null;
+  }
+
+  function showImpersonationBanner(name) {
+    var roleLabel = window.PAGE_ROLE === 'giaovien' ? 'Giáo viên' : 'Học sinh';
+    var banner = document.createElement('div');
+    banner.id = 'impersonate-banner';
+    banner.style.cssText = [
+      'position:fixed;top:0;left:0;right:0;z-index:99999',
+      'background:#c0392b;color:#fff;text-align:center',
+      'padding:8px 16px;font-size:13px;font-weight:500',
+      'box-shadow:0 2px 6px rgba(0,0,0,.3)',
+    ].join(';');
+    banner.innerHTML =
+      '&#9888; Đang xem dưới vai trò <b>' + roleLabel + '</b>: <b>' + name + '</b>' +
+      ' &nbsp;—&nbsp; ' +
+      '<a href="/admin/impersonate-back" style="color:#fff;font-weight:700;text-decoration:underline">' +
+      'Quay lại Admin</a>';
+    document.body.prepend(banner);
+    document.body.style.paddingTop = (document.body.style.paddingTop
+      ? parseInt(document.body.style.paddingTop) + 36 : 36) + 'px';
+  }
+
   /* ── Auto-init khi trang load xong ── */
   document.addEventListener("DOMContentLoaded", function () {
     if (window.PAGE_ROLE) {
       window.initLayout(window.PAGE_ROLE, window.PAGE_ACTIVE || "");
     }
     applySemanticIcons();
+
+    var impName = getImpersonatingName();
+    if (impName && window.PAGE_ROLE && window.PAGE_ROLE !== 'admin') {
+      showImpersonationBanner(impName);
+    }
   });
 })();

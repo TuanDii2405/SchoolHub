@@ -21,6 +21,9 @@ Route::post('/doi-mat-khau',[AuthController::class, 'doiMatKhau']);
 // Admin
 Route::prefix('admin')->name('admin.')->middleware(['auth.check', 'role:admin'])->group(function () {
     Route::get('/',           [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::post('/thong-bao',         [AdminController::class, 'thongBaoStore'])->name('thong-bao.store');
+    Route::put('/thong-bao/{id}',     [AdminController::class, 'thongBaoUpdate'])->name('thong-bao.update');
+    Route::delete('/thong-bao/{id}',  [AdminController::class, 'thongBaoDestroy'])->name('thong-bao.destroy');
     Route::get('/hoc-sinh',          [AdminController::class, 'hocSinh'])->name('hoc-sinh');
     Route::post('/hoc-sinh',         [AdminController::class, 'hocSinhStore'])->name('hoc-sinh.store');
     Route::put('/hoc-sinh/{id}',     [AdminController::class, 'hocSinhUpdate'])->name('hoc-sinh.update');
@@ -47,10 +50,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth.check', 'role:admin'])
     Route::post('/ky-thi',         [AdminController::class, 'kyThiStore'])->name('ky-thi.store');
     Route::put('/ky-thi/{id}',     [AdminController::class, 'kyThiUpdate'])->name('ky-thi.update');
     Route::delete('/ky-thi/{id}',  [AdminController::class, 'kyThiDestroy'])->name('ky-thi.destroy');
-    Route::get('/de-thi',          [AdminController::class, 'deThi'])->name('de-thi');
-    Route::post('/de-thi',         [AdminController::class, 'deThiStore'])->name('de-thi.store');
-    Route::put('/de-thi/{id}',     [AdminController::class, 'deThiUpdate'])->name('de-thi.update');
-    Route::delete('/de-thi/{id}',  [AdminController::class, 'deThiDestroy'])->name('de-thi.destroy');
+    Route::get('/de-thi',                                   [AdminController::class, 'deThi'])->name('de-thi');
+    Route::post('/de-thi',                                  [AdminController::class, 'deThiStore'])->name('de-thi.store');
+    Route::put('/de-thi/{id}',                              [AdminController::class, 'deThiUpdate'])->name('de-thi.update');
+    Route::delete('/de-thi/{id}',                           [AdminController::class, 'deThiDestroy'])->name('de-thi.destroy');
+    Route::get('/de-thi/{id}/cau-hoi',                      [AdminController::class, 'deThiCauHoi'])->name('de-thi.cau-hoi');
+    Route::post('/de-thi/{id}/cau-hoi',                     [AdminController::class, 'deThiCauHoiStore'])->name('de-thi.cau-hoi.store');
+    Route::delete('/de-thi/{id}/cau-hoi/{chiTietId}',       [AdminController::class, 'deThiCauHoiDestroy'])->name('de-thi.cau-hoi.destroy');
+    Route::get('/de-thi/{id}/dem-cau-hoi',                  [AdminController::class, 'deThiDemCauHoi'])->name('de-thi.dem-cau-hoi');
     Route::get('/chu-de',          [AdminController::class, 'chuDe'])->name('chu-de');
     Route::post('/chu-de',         [AdminController::class, 'chuDeStore'])->name('chu-de.store');
     Route::put('/chu-de/{id}',     [AdminController::class, 'chuDeUpdate'])->name('chu-de.update');
@@ -65,20 +72,59 @@ Route::prefix('admin')->name('admin.')->middleware(['auth.check', 'role:admin'])
     Route::post('/cau-hoi/tra-loi-ngan',        [AdminController::class, 'cauHoiNganStore'])->name('cau-hoi.ngan.store');
     Route::put('/cau-hoi/tra-loi-ngan/{id}',    [AdminController::class, 'cauHoiNganUpdate'])->name('cau-hoi.ngan.update');
     Route::delete('/cau-hoi/tra-loi-ngan/{id}', [AdminController::class, 'cauHoiNganDestroy'])->name('cau-hoi.ngan.destroy');
+    Route::post('/impersonate/{id}',            [AdminController::class, 'impersonate'])->name('impersonate');
 });
+
+Route::get('/admin/impersonate-back', [AdminController::class, 'impersonateBack'])
+    ->name('admin.impersonate.back')
+    ->middleware('auth.check');
 
 // Teacher
 Route::prefix('giao-vien')->name('teacher.')->middleware(['auth.check', 'role:teacher'])->group(function () {
-    Route::get('/',             [TeacherController::class, 'dashboard'])->name('dashboard');
-    Route::get('/lop-hoc',      [TeacherController::class, 'lopHoc'])->name('lop-hoc');
-    Route::get('/chu-de',       [TeacherController::class, 'chuDe'])->name('chu-de');
-    Route::get('/de-thi',       [TeacherController::class, 'deThi'])->name('de-thi');
-    Route::get('/4pa',          [TeacherController::class, 'tracNghiem4PA'])->name('4pa');
-    Route::get('/dung-sai',     [TeacherController::class, 'tracNghiemDungSai'])->name('dung-sai');
-    Route::get('/tra-loi-ngan', [TeacherController::class, 'tracNghiemTraLoiNgan'])->name('tra-loi-ngan');
-    Route::get('/diem-danh',    [TeacherController::class, 'diemDanh'])->name('diem-danh');
-    Route::get('/thong-tin',    [TeacherController::class, 'thongTin'])->name('thong-tin');
-    Route::get('/doi-mat-khau', [TeacherController::class, 'doiMatKhau'])->name('doi-mat-khau');
+    Route::get('/',                    [TeacherController::class, 'dashboard'])->name('dashboard');
+    Route::post('/thong-bao',          [TeacherController::class, 'thongBaoStore'])->name('thong-bao.store');
+    Route::put('/thong-bao/{id}',      [TeacherController::class, 'thongBaoUpdate'])->name('thong-bao.update');
+    Route::delete('/thong-bao/{id}',   [TeacherController::class, 'thongBaoDestroy'])->name('thong-bao.destroy');
+    Route::get('/lop-hoc',             [TeacherController::class, 'lopHoc'])->name('lop-hoc');
+    Route::get('/de-thi',                                   [TeacherController::class, 'deThi'])->name('de-thi');
+    Route::post('/de-thi',                                  [TeacherController::class, 'deThiStore'])->name('de-thi.store');
+    Route::put('/de-thi/{id}',                              [TeacherController::class, 'deThiUpdate'])->name('de-thi.update');
+    Route::delete('/de-thi/{id}',                           [TeacherController::class, 'deThiDestroy'])->name('de-thi.destroy');
+    Route::get('/de-thi/{id}/cau-hoi',                      [TeacherController::class, 'deThiCauHoi'])->name('de-thi.cau-hoi');
+    Route::post('/de-thi/{id}/cau-hoi',                     [TeacherController::class, 'deThiCauHoiStore'])->name('de-thi.cau-hoi.store');
+    Route::delete('/de-thi/{id}/cau-hoi/{chiTietId}',       [TeacherController::class, 'deThiCauHoiDestroy'])->name('de-thi.cau-hoi.destroy');
+    Route::get('/de-thi/{id}/dem-cau-hoi',                  [TeacherController::class, 'deThiDemCauHoi'])->name('de-thi.dem-cau-hoi');
+    Route::get('/4pa',                    [TeacherController::class, 'tracNghiem4PA'])->name('4pa');
+    Route::post('/4pa',                   [TeacherController::class, 'cauHoi4PAStore'])->name('4pa.store');
+    Route::put('/4pa/{id}',               [TeacherController::class, 'cauHoi4PAUpdate'])->name('4pa.update');
+    Route::delete('/4pa/{id}',            [TeacherController::class, 'cauHoi4PADestroy'])->name('4pa.destroy');
+    Route::get('/dung-sai',               [TeacherController::class, 'tracNghiemDungSai'])->name('dung-sai');
+    Route::post('/dung-sai',              [TeacherController::class, 'cauHoiDSStore'])->name('dung-sai.store');
+    Route::put('/dung-sai/{id}',          [TeacherController::class, 'cauHoiDSUpdate'])->name('dung-sai.update');
+    Route::delete('/dung-sai/{id}',       [TeacherController::class, 'cauHoiDSDestroy'])->name('dung-sai.destroy');
+    Route::get('/tra-loi-ngan',           [TeacherController::class, 'tracNghiemTraLoiNgan'])->name('tra-loi-ngan');
+    Route::post('/tra-loi-ngan',          [TeacherController::class, 'cauHoiNganStore'])->name('tra-loi-ngan.store');
+    Route::put('/tra-loi-ngan/{id}',      [TeacherController::class, 'cauHoiNganUpdate'])->name('tra-loi-ngan.update');
+    Route::delete('/tra-loi-ngan/{id}',   [TeacherController::class, 'cauHoiNganDestroy'])->name('tra-loi-ngan.destroy');
+    Route::get('/chu-de',            [TeacherController::class, 'chuDe'])->name('chu-de');
+    Route::post('/chu-de',           [TeacherController::class, 'chuDeStore'])->name('chu-de.store');
+    Route::put('/chu-de/{id}',       [TeacherController::class, 'chuDeUpdate'])->name('chu-de.update');
+    Route::delete('/chu-de/{id}',    [TeacherController::class, 'chuDeDestroy'])->name('chu-de.destroy');
+    Route::get('/diem-danh',         [TeacherController::class, 'diemDanh'])->name('diem-danh');
+    Route::post('/diem-danh',        [TeacherController::class, 'diemDanhStore'])->name('diem-danh.store');
+    Route::put('/diem-danh/{id}',    [TeacherController::class, 'diemDanhUpdate'])->name('diem-danh.update');
+    Route::delete('/diem-danh/{id}', [TeacherController::class, 'diemDanhDestroy'])->name('diem-danh.destroy');
+    Route::get('/ky-thi',            [TeacherController::class, 'kyThi'])->name('ky-thi');
+    Route::post('/ky-thi',           [TeacherController::class, 'kyThiStore'])->name('ky-thi.store');
+    Route::put('/ky-thi/{id}',       [TeacherController::class, 'kyThiUpdate'])->name('ky-thi.update');
+    Route::delete('/ky-thi/{id}',    [TeacherController::class, 'kyThiDestroy'])->name('ky-thi.destroy');
+    Route::get('/diem-hoc-sinh',     [TeacherController::class, 'diemHocSinh'])->name('diem-hoc-sinh');
+    Route::get('/don-xin-nghi',      [TeacherController::class, 'donXinNghi'])->name('don-xin-nghi');
+    Route::put('/don-xin-nghi/{id}', [TeacherController::class, 'donXinNghiUpdate'])->name('don-xin-nghi.update');
+    Route::get('/thong-tin',         [TeacherController::class, 'thongTin'])->name('thong-tin');
+    Route::put('/thong-tin',         [TeacherController::class, 'thongTinUpdate'])->name('thong-tin.update');
+    Route::get('/doi-mat-khau',      [TeacherController::class, 'doiMatKhau'])->name('doi-mat-khau');
+    Route::post('/doi-mat-khau',     [TeacherController::class, 'doiMatKhauUpdate'])->name('doi-mat-khau.update');
 });
 
 // Student

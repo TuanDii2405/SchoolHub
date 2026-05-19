@@ -35,7 +35,12 @@
             </div>
 
             <div class="table-wrap">
-                <table class="tbl" id="deThiTable">
+                <table class="tbl" id="deThiTable" style="table-layout:fixed">
+                    <colgroup>
+                        <col style="width:50px"><col><col style="width:110px">
+                        <col style="width:85px"><col style="width:200px"><col style="width:110px">
+                        <col style="width:90px"><col style="width:70px"><col style="width:280px">
+                    </colgroup>
                     <thead>
                         <tr>
                             <th>STT</th>
@@ -53,14 +58,17 @@
                         @forelse ($deThis as $i => $dt)
                         <tr>
                             <td>{{ $i + 1 }}</td>
-                            <td style="text-align:left">{{ $dt->TenDeThi }}</td>
+                            <td style="text-align:left;white-space:normal;word-break:break-word">{{ $dt->TenDeThi }}</td>
                             <td>{{ $dt->Ten_MonHoc }}</td>
                             <td>{{ $dt->Ten_KhoiLop }}</td>
-                            <td style="text-align:left">{{ $dt->MoTa ?? '—' }}</td>
+                            <td style="text-align:left;white-space:normal;word-break:break-word">{{ $dt->MoTa ?? '—' }}</td>
                             <td>{{ $dt->ten_nguoi_tao }}</td>
                             <td>{{ \Carbon\Carbon::parse($dt->NgayTao)->format('d/m/Y') }}</td>
                             <td>{{ $dt->tong_cau_hoi }}</td>
-                            <td>
+                            <td style="white-space:nowrap">
+                                <a href="{{ route('admin.de-thi.cau-hoi', $dt->ID_MaDeThi) }}"
+                                   class="btn-edit">Xem</a>
+
                                 <button class="btn-edit" onclick="openEdit(
                                     {{ $dt->ID_MaDeThi }},
                                     '{{ addslashes($dt->TenDeThi) }}',

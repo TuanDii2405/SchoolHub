@@ -10,7 +10,7 @@
                      letter-spacing:.5px;padding:6px 0 2px;border-bottom:1px solid var(--cerulean-200);margin-bottom:4px; }
         .ans-grid   { display:grid;grid-template-columns:auto 1fr;align-items:center;gap:6px 10px;margin-top:4px; }
         .ans-label  { font-size:13px;font-weight:700;color:var(--cerulean-dark);width:28px;text-align:center; }
-        .q-text     { max-width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:left; }
+        .tbl td.q-text { text-align:left; white-space:normal; word-break:break-word; }
         .da-badge   { display:inline-block;padding:1px 8px;border-radius:12px;font-size:12px;font-weight:700;
                       background:var(--cerulean);color:#fff; }
         .ds-row     { display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;margin-bottom:6px; }
@@ -67,7 +67,11 @@
                            placeholder="Tìm nội dung, chủ đề..." oninput="filterTbl('tbl4pa','search4pa')">
                 </div>
                 <div class="table-wrap">
-                    <table class="tbl" id="tbl4pa">
+                    <table class="tbl" id="tbl4pa" style="table-layout:fixed">
+                        <colgroup>
+                            <col style="width:50px"><col><col style="width:270px">
+                            <col style="width:90px"><col style="width:80px"><col style="width:130px"><col style="width:200px">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>STT</th><th>Nội dung câu hỏi</th><th>Chủ đề</th>
@@ -78,14 +82,12 @@
                             @forelse ($cau4PA as $i => $q)
                             <tr>
                                 <td>{{ $i + 1 }}</td>
-                                <td class="q-text" title="{{ $q->NoiDungCauHoi_TracNghiem4PhuongAn }}">
-                                    {{ Str::limit($q->NoiDungCauHoi_TracNghiem4PhuongAn, 60) }}
-                                </td>
+                                <td class="q-text">{{ $q->NoiDungCauHoi_TracNghiem4PhuongAn }}</td>
                                 <td>{{ $q->chu_de }}</td>
                                 <td>{{ $q->Ten_MonHoc }}</td>
                                 <td>{{ $q->Ten_KhoiLop }}</td>
                                 <td><span class="da-badge">{{ $q->DapAn_TracNghiem4PhuongAn }}</span></td>
-                                <td>
+                                <td style="white-space:nowrap">
                                     <button class="btn-edit" onclick='edit4PA(@json($q))'>Sửa</button>
                                     <form method="POST"
                                           action="{{ route('admin.cau-hoi.4pa.destroy', $q->ID_TracNghiem4PhuongAn) }}"
@@ -112,11 +114,15 @@
                            placeholder="Tìm nội dung, chủ đề..." oninput="filterTbl('tblDS','searchDS')">
                 </div>
                 <div class="table-wrap">
-                    <table class="tbl" id="tblDS">
+                    <table class="tbl" id="tblDS" style="table-layout:fixed">
+                        <colgroup>
+                            <col style="width:50px"><col><col style="width:270px">
+                            <col style="width:90px"><col style="width:80px"><col style="width:130px"><col style="width:200px">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>STT</th><th>Nội dung câu hỏi</th><th>Chủ đề</th>
-                                <th>Môn</th><th>Khối</th><th>Đáp án (M1–M4)</th><th>Hành động</th>
+                                <th>Môn</th><th>Khối</th><th>Đáp án</th><th>Hành động</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -126,20 +132,16 @@
                             @endphp
                             <tr>
                                 <td>{{ $i + 1 }}</td>
-                                <td class="q-text" title="{{ $q->NoiDungCauHoi_TracNghiemDungSai }}">
-                                    {{ Str::limit($q->NoiDungCauHoi_TracNghiemDungSai, 60) }}
-                                </td>
+                                <td class="q-text">{{ $q->NoiDungCauHoi_TracNghiemDungSai }}</td>
                                 <td>{{ $q->chu_de }}</td>
                                 <td>{{ $q->Ten_MonHoc }}</td>
                                 <td>{{ $q->Ten_KhoiLop }}</td>
-                                <td>
+                                <td style="white-space:nowrap">
                                     @for ($k = 0; $k < 4; $k++)
-                                        <span class="da-badge" style="{{ $da[$k]==='T' ? '' : 'background:var(--jasper)' }}">
-                                            M{{ $k+1 }}:{{ $da[$k]==='T' ? 'Đ' : 'S' }}
-                                        </span>
+                                        <span class="da-badge" style="{{ $da[$k]==='T' ? '' : 'background:var(--jasper)' }};padding:1px 6px;margin:1px">{{ $da[$k]==='T' ? 'Đ' : 'S' }}</span>
                                     @endfor
                                 </td>
-                                <td>
+                                <td style="white-space:nowrap">
                                     <button class="btn-edit" onclick='editDS(@json($q))'>Sửa</button>
                                     <form method="POST"
                                           action="{{ route('admin.cau-hoi.ds.destroy', $q->ID_TracNghiemDungSai) }}"
@@ -166,7 +168,11 @@
                            placeholder="Tìm nội dung, chủ đề..." oninput="filterTbl('tblNgan','searchNgan')">
                 </div>
                 <div class="table-wrap">
-                    <table class="tbl" id="tblNgan">
+                    <table class="tbl" id="tblNgan" style="table-layout:fixed">
+                        <colgroup>
+                            <col style="width:50px"><col><col style="width:270px">
+                            <col style="width:90px"><col style="width:80px"><col style="width:130px"><col style="width:200px">
+                        </colgroup>
                         <thead>
                             <tr>
                                 <th>STT</th><th>Nội dung câu hỏi</th><th>Chủ đề</th>
@@ -177,9 +183,7 @@
                             @forelse ($cauNgan as $i => $q)
                             <tr>
                                 <td>{{ $i + 1 }}</td>
-                                <td class="q-text" title="{{ $q->NoiDungCauHoi_TracNghiemTraLoiNgan }}">
-                                    {{ Str::limit($q->NoiDungCauHoi_TracNghiemTraLoiNgan, 60) }}
-                                </td>
+                                <td class="q-text">{{ $q->NoiDungCauHoi_TracNghiemTraLoiNgan }}</td>
                                 <td>{{ $q->chu_de }}</td>
                                 <td>{{ $q->Ten_MonHoc }}</td>
                                 <td>{{ $q->Ten_KhoiLop }}</td>
@@ -188,7 +192,7 @@
                                         {{ $q->KiTuThu1CuaDapAn_TracNghiemTraLoiNgan }}{{ $q->KiTuThu2CuaDapAn_TracNghiemTraLoiNgan }}{{ $q->KiTuThu3CuaDapAn_TracNghiemTraLoiNgan }}{{ $q->KiTuThu4CuaDapAn_TracNghiemTraLoiNgan }}
                                     </span>
                                 </td>
-                                <td>
+                                <td style="white-space:nowrap">
                                     <button class="btn-edit" onclick='editNgan(@json($q))'>Sửa</button>
                                     <form method="POST"
                                           action="{{ route('admin.cau-hoi.ngan.destroy', $q->ID_TracNghiemTraLoiNgan) }}"

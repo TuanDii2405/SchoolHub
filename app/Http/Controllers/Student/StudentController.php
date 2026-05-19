@@ -13,7 +13,46 @@ class StudentController extends Controller
 {
     public function dashboard(): View
     {
-        return view('student.HocSinh_TrangChu');
+        $studentId = session('auth.id');
+
+        $thongBaos = DB::select(
+            "SELECT DISTINCT tb.*, u.HoVaTen_User as ten_nguoi_gui,
+                    k.Ten_KhoiLop, m.Ten_MonHoc
+             FROM Thong_bao tb
+             JOIN `User` u ON tb.ID_User = u.ID_User
+             LEFT JOIN Khoi_lop k ON tb.ID_KhoiLop = k.ID_KhoiLop
+             LEFT JOIN Mon_Hoc m ON tb.ID_MonHoc = m.ID_MonHoc
+             WHERE
+               -- Toàn hệ thống
+               (tb.ID_KhoiLop IS NULL AND tb.ID_MonHoc IS NULL)
+               -- Chỉ có khối, không có môn
+               OR (tb.ID_KhoiLop IS NOT NULL AND tb.ID_MonHoc IS NULL
+                   AND tb.ID_KhoiLop IN (
+                       SELECT DISTINCT l.ID_KhoiLop FROM Lop_hoc_ThanhVien lv
+                       JOIN Lop_hoc l ON lv.ID_LopHoc = l.ID_LopHoc
+                       WHERE lv.ID_Student = ?
+                   ))
+               -- Chỉ có môn, không có khối
+               OR (tb.ID_KhoiLop IS NULL AND tb.ID_MonHoc IS NOT NULL
+                   AND tb.ID_MonHoc IN (
+                       SELECT DISTINCT l.ID_MonHoc FROM Lop_hoc_ThanhVien lv
+                       JOIN Lop_hoc l ON lv.ID_LopHoc = l.ID_LopHoc
+                       WHERE lv.ID_Student = ?
+                   ))
+               -- Có cả khối lẫn môn: phải khớp đúng lớp học học sinh đang tham gia
+               OR (tb.ID_KhoiLop IS NOT NULL AND tb.ID_MonHoc IS NOT NULL
+                   AND EXISTS (
+                       SELECT 1 FROM Lop_hoc_ThanhVien lv
+                       JOIN Lop_hoc l ON lv.ID_LopHoc = l.ID_LopHoc
+                       WHERE lv.ID_Student = ?
+                         AND l.ID_KhoiLop = tb.ID_KhoiLop
+                         AND l.ID_MonHoc  = tb.ID_MonHoc
+                   ))
+             ORDER BY tb.NgayTao_ThongBao DESC",
+            [$studentId, $studentId, $studentId]
+        );
+
+        return view('student.HocSinh_TrangChu', compact('thongBaos'));
     }
 
     public function lopHoc(Request $request): View

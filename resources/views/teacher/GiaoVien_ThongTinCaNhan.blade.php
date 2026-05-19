@@ -14,6 +14,16 @@
         <div class="role-title-box"><h2>VAI TRÒ GIÁO VIÊN</h2></div>
         <div class="content-box">
             <div class="section-title blue">Thông tin cá nhân</div>
+
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    @foreach ($errors->all() as $e) {{ $e }}<br> @endforeach
+                </div>
+            @endif
+
             @if ($teacher)
             <table class="info-table" style="max-width:600px">
                 <tr>
@@ -50,14 +60,73 @@
                 </tr>
             </table>
             <br>
-            <button class="btn-primary" onclick="alert('Cập nhật thông tin!')">Cập nhật thông tin</button>
+            <button class="btn-primary" onclick="openEdit()">Cập nhật thông tin</button>
             @else
             <div class="empty-notice">Không tìm thấy thông tin tài khoản.</div>
             @endif
         </div>
     </main>
 </div>
-<script>window.PAGE_ROLE = 'giaovien'; window.PAGE_ACTIVE = 'gv-thongtin';</script>
+
+{{-- MODAL cập nhật thông tin --}}
+<div id="modalEdit" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeEdit()">
+    <div class="modal-box" style="width:480px">
+        <div class="modal-header">
+            <span class="modal-header-title">Cập nhật thông tin cá nhân</span>
+            <button class="modal-close" onclick="closeEdit()">×</button>
+        </div>
+        <form method="POST" action="{{ route('teacher.thong-tin.update') }}">
+            @csrf @method('PUT')
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Họ và tên <span class="required">*</span></label>
+                    <input class="form-input" type="text" name="HoVaTen_User" id="f_hoten"
+                           required maxlength="150">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input class="form-input" type="email" name="EmailCaNhan_User" id="f_email" maxlength="150">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Số điện thoại</label>
+                    <input class="form-input" type="text" name="SoDienThoai_User" id="f_sdt" maxlength="20">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ngày sinh</label>
+                    <input class="form-input" type="date" name="NgayThangNamSinh_User" id="f_ngaysinh">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeEdit()">Hủy</button>
+                <button type="submit" class="action-btn">Lưu thay đổi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    window.PAGE_ROLE   = 'giaovien';
+    window.PAGE_ACTIVE = 'gv-thongtin';
+
+    @if ($teacher)
+    const teacherData = @json($teacher);
+    @endif
+
+    function openEdit() {
+        document.getElementById('f_hoten').value    = teacherData.HoVaTen_User    || '';
+        document.getElementById('f_email').value    = teacherData.EmailCaNhan_User || '';
+        document.getElementById('f_sdt').value      = teacherData.SoDienThoai_User || '';
+        const dob = teacherData.NgayThangNamSinh_User
+            ? teacherData.NgayThangNamSinh_User.substring(0, 10) : '';
+        document.getElementById('f_ngaysinh').value = dob;
+        document.getElementById('modalEdit').style.display = 'flex';
+        document.getElementById('f_hoten').focus();
+    }
+
+    function closeEdit() {
+        document.getElementById('modalEdit').style.display = 'none';
+    }
+</script>
 <script src="{{ asset('assets/js/layout.js') }}"></script>
 </body>
 </html>

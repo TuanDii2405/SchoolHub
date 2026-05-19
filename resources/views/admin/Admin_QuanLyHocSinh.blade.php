@@ -65,7 +65,15 @@
                                     <span class="badge badge-inactive">Không HĐ</span>
                                 @endif
                             </td>
-                            <td>
+                            <td style="white-space:nowrap">
+                                <form method="POST"
+                                      action="{{ route('admin.impersonate', $hs->ID_User) }}"
+                                      style="display:inline"
+                                      onsubmit="return confirm('Đăng nhập vào tài khoản của {{ addslashes($hs->HoVaTen_User) }}?')">
+                                    @csrf
+                                    <button type="submit" class="btn-edit">Xem</button>
+                                </form>
+
                                 <button class="btn-edit" onclick="openEdit(
                                     {{ $hs->ID_User }},
                                     '{{ addslashes($hs->HoVaTen_User) }}',

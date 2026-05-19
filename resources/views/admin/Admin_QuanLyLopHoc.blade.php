@@ -60,7 +60,7 @@
                             <td>
                                 <button class="tbl-link"
                                         onclick="xemThanhVien({{ $lh->ID_LopHoc }}, '{{ addslashes($lh->TenLopHoc) }}')">
-                                    {{ $lh->so_hoc_sinh }} HS
+                                    {{ $lh->so_hoc_sinh }} học sinh
                                 </button>
                             </td>
                             <td>

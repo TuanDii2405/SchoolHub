@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.check' => \App\Http\Middleware\AuthMiddleware::class,
             'role'       => \App\Http\Middleware\RoleMiddleware::class,
         ]);
+        $middleware->encryptCookies(except: ['admin_impersonating']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

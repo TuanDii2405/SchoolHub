@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,60 @@ class AdminController extends Controller
 {
     public function dashboard(): View
     {
-        return view('admin.Admin_TrangChu');
+        $thongBaos = DB::select(
+            "SELECT tb.*, u.HoVaTen_User as ten_nguoi_gui,
+                    k.Ten_KhoiLop, m.Ten_MonHoc
+             FROM Thong_bao tb
+             JOIN `User` u ON tb.ID_User = u.ID_User
+             LEFT JOIN Khoi_lop k ON tb.ID_KhoiLop = k.ID_KhoiLop
+             LEFT JOIN Mon_Hoc m ON tb.ID_MonHoc = m.ID_MonHoc
+             ORDER BY tb.NgayTao_ThongBao DESC"
+        );
+        $monHocs  = DB::select("SELECT ID_MonHoc, Ten_MonHoc FROM Mon_Hoc ORDER BY ID_MonHoc");
+        $khoiLops = DB::select("SELECT ID_KhoiLop, Ten_KhoiLop FROM Khoi_lop ORDER BY ID_KhoiLop");
+        return view('admin.Admin_TrangChu', compact('thongBaos', 'monHocs', 'khoiLops'));
+    }
+
+    public function thongBaoStore(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'NoiDung_ThongBao' => 'required|string|max:2000',
+            'ID_KhoiLop'       => 'nullable|integer|exists:Khoi_lop,ID_KhoiLop',
+            'ID_MonHoc'        => 'nullable|integer|exists:Mon_Hoc,ID_MonHoc',
+        ]);
+
+        DB::table('Thong_bao')->insert([
+            'ID_User'          => session('auth.id'),
+            'NoiDung_ThongBao' => $data['NoiDung_ThongBao'],
+            'ID_KhoiLop'       => $data['ID_KhoiLop'] ?? null,
+            'ID_MonHoc'        => $data['ID_MonHoc'] ?? null,
+            'NgayTao_ThongBao' => now(),
+        ]);
+
+        return redirect()->route('admin.dashboard')->with('success', 'Đã tạo thông báo!');
+    }
+
+    public function thongBaoUpdate(Request $request, int $id): RedirectResponse
+    {
+        $data = $request->validate([
+            'NoiDung_ThongBao' => 'required|string|max:2000',
+            'ID_KhoiLop'       => 'nullable|integer|exists:Khoi_lop,ID_KhoiLop',
+            'ID_MonHoc'        => 'nullable|integer|exists:Mon_Hoc,ID_MonHoc',
+        ]);
+
+        DB::table('Thong_bao')->where('ID_ThongBao', $id)->update([
+            'NoiDung_ThongBao' => $data['NoiDung_ThongBao'],
+            'ID_KhoiLop'       => $data['ID_KhoiLop'] ?? null,
+            'ID_MonHoc'        => $data['ID_MonHoc'] ?? null,
+        ]);
+
+        return redirect()->route('admin.dashboard')->with('success', 'Đã cập nhật thông báo!');
+    }
+
+    public function thongBaoDestroy(int $id): RedirectResponse
+    {
+        DB::table('Thong_bao')->where('ID_ThongBao', $id)->delete();
+        return redirect()->route('admin.dashboard')->with('success', 'Đã xóa thông báo!');
     }
 
     public function hocSinh(): View
@@ -383,6 +437,11 @@ class AdminController extends Controller
             'PhanBoDiemTracNghiemTraLoiNgan_KyThi'   => 'required|numeric|min:0',
         ]);
 
+        $countErrors = $this->checkDeThiSoCau((int) $data['ID_MaDeThi'], $data);
+        if ($countErrors) {
+            return back()->withErrors($countErrors)->withInput();
+        }
+
         DB::table('Ky_thi')->insert($data);
         return redirect()->route('admin.ky-thi')->with('success', 'Tạo kỳ thi thành công!');
     }
@@ -407,6 +466,11 @@ class AdminController extends Controller
             'PhanBoDiemTracNghiemDungSai_KyThi'      => 'required|numeric|min:0',
             'PhanBoDiemTracNghiemTraLoiNgan_KyThi'   => 'required|numeric|min:0',
         ]);
+
+        $countErrors = $this->checkDeThiSoCau((int) $data['ID_MaDeThi'], $data);
+        if ($countErrors) {
+            return back()->withErrors($countErrors)->withInput();
+        }
 
         DB::table('Ky_thi')->where('ID_KyThi', $id)->update($data);
         return redirect()->route('admin.ky-thi')->with('success', 'Cập nhật kỳ thi thành công!');
@@ -487,6 +551,184 @@ class AdminController extends Controller
         } catch (\Exception) {
             return redirect()->route('admin.de-thi')->with('error', 'Không thể xóa: đề thi đang được sử dụng trong kỳ thi.');
         }
+    }
+
+    public function deThiCauHoi(int $id): View
+    {
+        $deThi = DB::table('De_Thi')
+            ->join('Mon_Hoc', 'De_Thi.ID_MaMon', '=', 'Mon_Hoc.ID_MonHoc')
+            ->join('Khoi_lop', 'De_Thi.ID_MaKhoi', '=', 'Khoi_lop.ID_KhoiLop')
+            ->where('De_Thi.ID_MaDeThi', $id)
+            ->select('De_Thi.*', 'Mon_Hoc.Ten_MonHoc', 'Khoi_lop.Ten_KhoiLop')
+            ->first();
+        abort_if(!$deThi, 404);
+
+        $in4PA = DB::select(
+            "SELECT dtct.ID_DeThiChiTiet, q.ID_TracNghiem4PhuongAn,
+                    q.NoiDungCauHoi_TracNghiem4PhuongAn, q.DapAn_TracNghiem4PhuongAn
+             FROM De_Thi_Chi_Tiet dtct
+             JOIN Cau_hoi_trac_nghiem_4_phuong_an q
+               ON dtct.ID_TracNghiem4PhuongAn = q.ID_TracNghiem4PhuongAn
+             WHERE dtct.ID_MaDeThi = ?
+             ORDER BY q.ID_TracNghiem4PhuongAn", [$id]);
+
+        $inDS = DB::select(
+            "SELECT dtct.ID_DeThiChiTiet, q.ID_TracNghiemDungSai,
+                    q.NoiDungCauHoi_TracNghiemDungSai,
+                    q.DapAn_TracNghiem4PhuongAn as DapAn
+             FROM De_Thi_Chi_Tiet dtct
+             JOIN Cau_hoi_trac_nghiem_dung_sai q
+               ON dtct.ID_TracNghiemDungSai = q.ID_TracNghiemDungSai
+             WHERE dtct.ID_MaDeThi = ?
+             ORDER BY q.ID_TracNghiemDungSai", [$id]);
+
+        $inNgan = DB::select(
+            "SELECT dtct.ID_DeThiChiTiet, q.ID_TracNghiemTraLoiNgan,
+                    q.NoiDungCauHoi_TracNghiemTraLoiNgan,
+                    CONCAT(q.KiTuThu1CuaDapAn_TracNghiemTraLoiNgan,
+                           q.KiTuThu2CuaDapAn_TracNghiemTraLoiNgan,
+                           q.KiTuThu3CuaDapAn_TracNghiemTraLoiNgan,
+                           q.KiTuThu4CuaDapAn_TracNghiemTraLoiNgan) as DapAn
+             FROM De_Thi_Chi_Tiet dtct
+             JOIN Cau_hoi_tra_loi_ngan q
+               ON dtct.ID_TracNghiemTraLoiNgan = q.ID_TracNghiemTraLoiNgan
+             WHERE dtct.ID_MaDeThi = ?
+             ORDER BY q.ID_TracNghiemTraLoiNgan", [$id]);
+
+        $avail4PA = DB::select(
+            "SELECT q.ID_TracNghiem4PhuongAn, q.NoiDungCauHoi_TracNghiem4PhuongAn,
+                    q.DapAn_TracNghiem4PhuongAn
+             FROM Cau_hoi_trac_nghiem_4_phuong_an q
+             WHERE q.ID_MonHoc = ? AND q.ID_KhoiLop = ?
+               AND q.ID_TracNghiem4PhuongAn NOT IN (
+                   SELECT ID_TracNghiem4PhuongAn FROM De_Thi_Chi_Tiet
+                   WHERE ID_MaDeThi = ? AND ID_TracNghiem4PhuongAn IS NOT NULL
+               )
+             ORDER BY q.ID_TracNghiem4PhuongAn",
+            [$deThi->ID_MaMon, $deThi->ID_MaKhoi, $id]);
+
+        $availDS = DB::select(
+            "SELECT q.ID_TracNghiemDungSai, q.NoiDungCauHoi_TracNghiemDungSai,
+                    q.DapAn_TracNghiem4PhuongAn as DapAn
+             FROM Cau_hoi_trac_nghiem_dung_sai q
+             WHERE q.ID_MonHoc = ? AND q.ID_KhoiLop = ?
+               AND q.ID_TracNghiemDungSai NOT IN (
+                   SELECT ID_TracNghiemDungSai FROM De_Thi_Chi_Tiet
+                   WHERE ID_MaDeThi = ? AND ID_TracNghiemDungSai IS NOT NULL
+               )
+             ORDER BY q.ID_TracNghiemDungSai",
+            [$deThi->ID_MaMon, $deThi->ID_MaKhoi, $id]);
+
+        $availNgan = DB::select(
+            "SELECT q.ID_TracNghiemTraLoiNgan, q.NoiDungCauHoi_TracNghiemTraLoiNgan,
+                    CONCAT(q.KiTuThu1CuaDapAn_TracNghiemTraLoiNgan,
+                           q.KiTuThu2CuaDapAn_TracNghiemTraLoiNgan,
+                           q.KiTuThu3CuaDapAn_TracNghiemTraLoiNgan,
+                           q.KiTuThu4CuaDapAn_TracNghiemTraLoiNgan) as DapAn
+             FROM Cau_hoi_tra_loi_ngan q
+             WHERE q.ID_MonHoc = ? AND q.ID_KhoiLop = ?
+               AND q.ID_TracNghiemTraLoiNgan NOT IN (
+                   SELECT ID_TracNghiemTraLoiNgan FROM De_Thi_Chi_Tiet
+                   WHERE ID_MaDeThi = ? AND ID_TracNghiemTraLoiNgan IS NOT NULL
+               )
+             ORDER BY q.ID_TracNghiemTraLoiNgan",
+            [$deThi->ID_MaMon, $deThi->ID_MaKhoi, $id]);
+
+        return view('admin.Admin_QuanLyDeThiCauHoi', compact(
+            'deThi', 'in4PA', 'inDS', 'inNgan', 'avail4PA', 'availDS', 'availNgan'
+        ));
+    }
+
+    public function deThiCauHoiStore(Request $request, int $id): RedirectResponse
+    {
+        $deThi = DB::table('De_Thi')->where('ID_MaDeThi', $id)->first();
+        abort_if(!$deThi, 404);
+
+        $type        = $request->input('type');
+        $questionIds = array_filter(array_map('intval', (array) $request->input('question_ids', [])));
+
+        if (empty($questionIds) || !in_array($type, ['4pa', 'ds', 'ngan'])) {
+            return back()->with('error', 'Vui lòng chọn ít nhất một câu hỏi.');
+        }
+
+        $col = match($type) {
+            '4pa'  => 'ID_TracNghiem4PhuongAn',
+            'ds'   => 'ID_TracNghiemDungSai',
+            'ngan' => 'ID_TracNghiemTraLoiNgan',
+        };
+
+        $existing = DB::table('De_Thi_Chi_Tiet')
+            ->where('ID_MaDeThi', $id)
+            ->whereNotNull($col)
+            ->pluck($col)
+            ->toArray();
+
+        $added = 0;
+        foreach ($questionIds as $qid) {
+            if (!in_array($qid, $existing)) {
+                DB::table('De_Thi_Chi_Tiet')->insert([
+                    'ID_MaDeThi'              => $id,
+                    'ID_NguoiTao'             => session('auth.id'),
+                    'ID_MaMon'                => $deThi->ID_MaMon,
+                    'ID_MaKhoi'               => $deThi->ID_MaKhoi,
+                    'ID_TracNghiem4PhuongAn'  => $type === '4pa'  ? $qid : null,
+                    'ID_TracNghiemDungSai'    => $type === 'ds'   ? $qid : null,
+                    'ID_TracNghiemTraLoiNgan' => $type === 'ngan' ? $qid : null,
+                ]);
+                $added++;
+            }
+        }
+
+        return back()->with('success', "Đã thêm {$added} câu hỏi vào đề thi.");
+    }
+
+    public function deThiCauHoiDestroy(int $id, int $chiTietId): RedirectResponse
+    {
+        DB::table('De_Thi_Chi_Tiet')
+            ->where('ID_DeThiChiTiet', $chiTietId)
+            ->where('ID_MaDeThi', $id)
+            ->delete();
+        return back()->with('success', 'Đã xóa câu hỏi khỏi đề thi.');
+    }
+
+    public function deThiDemCauHoi(int $id): JsonResponse
+    {
+        $counts = DB::selectOne(
+            "SELECT
+                SUM(CASE WHEN ID_TracNghiem4PhuongAn IS NOT NULL THEN 1 ELSE 0 END) as so_4pa,
+                SUM(CASE WHEN ID_TracNghiemDungSai IS NOT NULL THEN 1 ELSE 0 END) as so_ds,
+                SUM(CASE WHEN ID_TracNghiemTraLoiNgan IS NOT NULL THEN 1 ELSE 0 END) as so_ngan
+             FROM De_Thi_Chi_Tiet WHERE ID_MaDeThi = ?",
+            [$id]
+        );
+        return response()->json([
+            'so_4pa'  => (int) ($counts->so_4pa  ?? 0),
+            'so_ds'   => (int) ($counts->so_ds   ?? 0),
+            'so_ngan' => (int) ($counts->so_ngan ?? 0),
+        ]);
+    }
+
+    private function checkDeThiSoCau(int $deThiId, array $data): array
+    {
+        $counts = DB::selectOne(
+            "SELECT
+                SUM(CASE WHEN ID_TracNghiem4PhuongAn IS NOT NULL THEN 1 ELSE 0 END) as so_4pa,
+                SUM(CASE WHEN ID_TracNghiemDungSai IS NOT NULL THEN 1 ELSE 0 END) as so_ds,
+                SUM(CASE WHEN ID_TracNghiemTraLoiNgan IS NOT NULL THEN 1 ELSE 0 END) as so_ngan
+             FROM De_Thi_Chi_Tiet WHERE ID_MaDeThi = ?",
+            [$deThiId]
+        );
+        $errs = [];
+        $c4   = (int) ($counts->so_4pa  ?? 0);
+        $cds  = (int) ($counts->so_ds   ?? 0);
+        $cng  = (int) ($counts->so_ngan ?? 0);
+        if ($data['SoCauHoiTracNghiem4PhuongAn_KyThi'] > $c4)
+            $errs[] = "Đề thi chỉ có {$c4} câu 4 phương án (kỳ thi yêu cầu {$data['SoCauHoiTracNghiem4PhuongAn_KyThi']} câu).";
+        if ($data['SoCauHoiTracNghiemDungSai_KyThi'] > $cds)
+            $errs[] = "Đề thi chỉ có {$cds} câu đúng/sai (kỳ thi yêu cầu {$data['SoCauHoiTracNghiemDungSai_KyThi']} câu).";
+        if ($data['SoCauHoiTracNghiemTraLoiNgan_KyThi'] > $cng)
+            $errs[] = "Đề thi chỉ có {$cng} câu trả lời ngắn (kỳ thi yêu cầu {$data['SoCauHoiTracNghiemTraLoiNgan_KyThi']} câu).";
+        return $errs;
     }
 
     public function chuDe(): View
@@ -783,5 +1025,53 @@ class AdminController extends Controller
         } catch (\Exception) {
             return redirect()->route('admin.hoc-sinh')->with('error', 'Không thể xóa: học sinh có dữ liệu liên quan (điểm thi, đơn xin nghỉ...).');
         }
+    }
+
+    public function impersonate(Request $request, int $id): RedirectResponse
+    {
+        $user = DB::selectOne(
+            "SELECT ID_User, HoVaTen_User, PhanQuyen_User, TrangThaiHoatDong_User
+             FROM `User` WHERE ID_User = ? AND PhanQuyen_User IN ('teacher','student')",
+            [$id]
+        );
+
+        if (!$user) abort(404);
+
+        $request->session()->put('impersonator', $request->session()->get('auth'));
+        $request->session()->put('auth', [
+            'id'        => (int) $user->ID_User,
+            'name'      => (string) $user->HoVaTen_User,
+            'role'      => (string) $user->PhanQuyen_User,
+            'logged_at' => now()->toIso8601String(),
+        ]);
+
+        $cookie = \Illuminate\Support\Facades\Cookie::make(
+            'admin_impersonating',
+            (string) $user->HoVaTen_User,
+            120, '/', null, false, false
+        );
+
+        $redirect = $user->PhanQuyen_User === 'teacher'
+            ? route('teacher.dashboard')
+            : route('student.dashboard');
+
+        return redirect($redirect)->withCookie($cookie);
+    }
+
+    public function impersonateBack(Request $request): RedirectResponse
+    {
+        $impersonator = $request->session()->get('impersonator');
+        if (!$impersonator) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        $request->session()->put('auth', $impersonator);
+        $request->session()->forget('impersonator');
+
+        $expiredCookie = \Illuminate\Support\Facades\Cookie::make(
+            'admin_impersonating', '', -1, '/', null, false, false
+        );
+
+        return redirect()->route('admin.dashboard')->withCookie($expiredCookie);
     }
 }

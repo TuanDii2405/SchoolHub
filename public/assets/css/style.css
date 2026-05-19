@@ -336,29 +336,41 @@ a.nav-btn {
 }
 
 .btn-danger {
+  display: inline-block;
   padding: 5px 14px;
-  background: var(--jasper);
-  color: var(--white);
-  border: none;
+  background: var(--white);
+  color: var(--jasper);
+  border: 1.5px solid var(--jasper);
   border-radius: 10px;
   font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  vertical-align: middle;
   cursor: pointer;
   margin-left: 4px;
-  transition: background 0.2s;
+  box-sizing: border-box;
+  transition: background 0.2s, color 0.2s;
 }
 .btn-danger:hover {
-  background: var(--jasper-dark);
+  background: var(--jasper);
+  color: var(--white);
 }
 
 .btn-edit {
+  display: inline-block;
   padding: 5px 14px;
   background: var(--white);
   color: var(--cerulean);
   border: 1.5px solid var(--cerulean);
   border-radius: 10px;
   font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  vertical-align: middle;
+  text-decoration: none;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
+  box-sizing: border-box;
 }
 .btn-edit:hover {
   background: var(--cerulean);
@@ -539,13 +551,23 @@ a.nav-btn {
 }
 
 .tbl-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 12px;
+  background: var(--white);
   color: var(--cerulean);
-  text-decoration: none;
+  border: 1.5px solid var(--cerulean);
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 
 .tbl-link:hover {
-  text-decoration: underline;
+  background: var(--cerulean);
+  color: var(--white);
 }
 
 /* ================================================================
@@ -812,3 +834,50 @@ a.nav-btn {
 .badge-active   { background: #e6f4ea; color: #256029; }
 .badge-inactive { background: #f3f7fb; color: var(--text-soft); }
 .badge-locked   { background: var(--jasper-100); color: var(--jasper-dark); }
+
+/* ================================================================
+   THÔNG BÁO
+   ================================================================ */
+.thongbao-list { display: flex; flex-direction: column; gap: 10px; }
+.thongbao-item {
+  background: var(--white);
+  border: 1px solid var(--cerulean-200);
+  border-left: 4px solid var(--cerulean);
+  border-radius: 8px;
+  padding: 12px 16px;
+}
+.thongbao-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+.thongbao-scope {
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--cerulean-100);
+  color: var(--cerulean-dark);
+  padding: 2px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.thongbao-scope.scope-all {
+  background: #e6f4ea;
+  color: #256029;
+}
+.thongbao-date {
+  font-size: 12px;
+  color: var(--text-soft);
+  white-space: nowrap;
+}
+.thongbao-content {
+  font-size: 14px;
+  color: var(--text-main);
+  margin-bottom: 6px;
+  line-height: 1.5;
+}
+.thongbao-footer {
+  font-size: 12px;
+  color: var(--text-soft);
+}
